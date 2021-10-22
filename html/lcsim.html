@@ -1,0 +1,4009 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.8.1" />
+<title>lcsim API documentation</title>
+<meta name="description" content="Blazar light curve simulation." />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>lcsim</code></h1>
+</header>
+<section id="section-intro">
+<p>Blazar light curve simulation.</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python"># -*- coding: utf-8 -*-
+#!/usr/bin/env python
+&#34;&#34;&#34;Blazar light curve simulation.
+&#34;&#34;&#34;
+
+from copy import deepcopy
+from math import ceil, exp
+import numpy as np
+from statsmodels.distributions import ECDF
+
+__author__ = &#34;Sebastian Kiehlmann&#34;
+__credits__ = [&#34;Sebastian Kiehlmann&#34;]
+__license__ = &#34;GPL&#34;
+__version__ = &#34;2.1&#34;
+__maintainer__ = &#34;Sebastian Kiehlmann&#34;
+__email__ = &#34;skiehl@caltech.edu&#34;
+__status__ = &#34;Production&#34;
+
+
+#==============================================================================
+# CLASSES
+#==============================================================================
+
+class ArtificialLightCurve:
+    &#34;&#34;&#34;Process an artificial light curve.&#34;&#34;&#34;
+
+    #--------------------------------------------------------------------------
+    def __init__(self, time, flux, lc_type):
+        &#34;&#34;&#34;Create an instance of ArtificialLightCurve.
+
+        Parameters
+        -----
+        time : np.ndarray
+            Time steps.
+        flux : np.ndarray
+            Flux values.
+
+        Returns
+        -----
+        out : ArtificialLightCurve-instance
+        &#34;&#34;&#34;
+
+        self.time_orig = time
+        self.flux_orig = flux
+        self.lc_type = lc_type
+        self.time_orig_total = time[-1] - time[0]
+        self.time_orig_sampling = time[1] - time[0]
+        self.size = self.time_orig.size
+
+        self.resampled = False
+        self.time_res = None
+        self.flux_res = None
+        self.time_res_total = None
+        self.time_res_sampling = None
+
+        self.error_sim = False
+        self.flux_err = None
+        self.flux_unc = None
+
+    #--------------------------------------------------------------------------
+    def __str__(self):
+        &#34;&#34;&#34;Returns gereneral information about the simulated data.
+        &#34;&#34;&#34;
+
+        text = &#39;Artificial light curve\n&#39;
+        text += &#39;Simulation type:        {0:&gt;10s}\n&#39;.format(self.lc_type)
+        text += &#39;Original time sampling: {0:10.3f}\n&#39;.format(
+                self.time_orig_sampling)
+        text += &#39;Original total time:    {0:10.3f}\n&#39;.format(
+                self.time_orig_total)
+
+        if self.resampled == &#39;const&#39;:
+            text += &#39;Resampled-------------------------\n&#39;
+            text += &#39;Time steps:             {0:&gt;10s}\n&#39;.format(&#39;even&#39;)
+            text += &#39;Time sampling:          {0:10.3f}\n&#39;.format(
+                    self.time_res_sampling)
+            text += &#39;Total time:             {0:10.3f}\n&#39;.format(
+                    self.time_res_total)
+        elif self.resampled in [&#39;powerlaw&#39;, &#39;lognormal&#39;, &#39;ecdf&#39;, &#39;specific&#39;]:
+            text += &#39;Resampled-------------------------\n&#39;
+            text += &#39;Time steps:             {0:&gt;10s}\n&#39;.format(&#39;uneven&#39;)
+            text += &#39;Distribution:           {0:&gt;10s}\n&#39;.format(self.resampled)
+            text += &#39;Median time sampling:   {0:10.3f}\n&#39;.format(
+                    self.time_res_sampling)
+            text += &#39;Total time:             {0:10.3f}\n&#39;.format(
+                    self.time_res_total)
+
+        if self.error_sim == &#39;const&#39;:
+            text += &#39;Gaussian noise added--------------\n&#39;
+            text += &#39;Uncertainties:  {0:&gt;18s}\n&#39;.format(&#39;homoscedastic&#39;)
+            text += &#39;Median uncertainty:     {0:10.3f}\n&#39;.format(
+                    np.median(self.flux_unc))
+
+        if self.error_sim in [&#39;specific&#39;, &#39;ecdf&#39;, &#39;lognormal&#39;]:
+            text += &#39;Gaussian noise added--------------\n&#39;
+            text += &#39;Uncertainties:  {0:&gt;18s}\n&#39;.format(&#39;heteroscedastic&#39;)
+            text += &#39;Distribution:   {0:&gt;18s}\n&#39;.format(self.error_sim)
+            text += &#39;Median uncertainty:     {0:10.3f}\n&#39;.format(
+                    np.median(self.flux_unc))
+
+        return text
+
+    #--------------------------------------------------------------------------
+    def _draw_from_powerlaw(self, index, minval, maxval, size=1):
+        &#34;&#34;&#34;Draws random numbers from a truncated power-law distribution.
+
+        Parameters
+        -----
+        index : float
+            Power-law index.
+        minval : float
+            Lower limit of the distribution.
+        maxval : float
+            Upper limit of the distribution.
+        size : int, default=1
+            Number of random data points to return.
+
+        Returns
+        -----
+        out : np.1darray
+            Random numbers.
+        &#34;&#34;&#34;
+
+        index = index + 1.
+
+        return np.power((maxval**index - minval**index) \
+                        * np.random.uniform(size=size) + minval**index,
+                        1. / index)
+
+    #--------------------------------------------------------------------------
+    def _draw_from_ecdf(self, data, size=1):
+        &#34;&#34;&#34;Draws random number from an empirical cumulative distribution
+        function (ECDF) defined by given data.
+
+        Parameters
+        -----
+        data : np.1darray
+            The data which defines the ECDF.
+        size : int, default=1
+            Number of random data points to return.
+
+        Returns
+        -----
+        out : np.1darray
+            Random numbers.
+        &#34;&#34;&#34;
+
+        ecdf = ECDF(data)
+        draw = np.random.uniform(low=ecdf.y[1], size=size)
+
+        return np.interp(draw, ecdf.y, ecdf.x)
+
+    #--------------------------------------------------------------------------
+    def _random_timesteps(
+            self, total_time, dist=&#39;powerlaw&#39;, params=None, recursion=0):
+        &#34;&#34;&#34;Creates random time data points with time steps following a given
+        distribution.
+
+        Parameters
+        -----
+        total_time : float
+            The total time to cover by the time data points
+        dist : str, default=&#39;powerlaw&#39;
+            Defines the distribution the time steps are drawn from. Choose from
+            truncated &#39;powerlaw&#39;, &#39;lognormal&#39; and &#39;ecdf&#39;. The distribution
+            parameters need to be set accordingly in the &#39;params&#39;.
+        params : list
+            A list of distribution parameters.
+            For &#39;powerlaw&#39; give (1) the power-law index, (2) the lower, and (3)
+            the upper limit of the truncated distribution.
+            For &#39;lognormal&#39; give the distribution (1) mu and (2) sigma.
+            For &#39;ecdf&#39; give an array of time steps (differences between time
+            data points not the time data points!).
+        recursion : int, default=0
+            Do not manually set a value. This parameter is needed internally
+            when the drawn time steps are not enough to cover the targeted
+            total time and a recursion call of the function is necessery.
+
+        Returns
+        -----
+        out : np.1darray
+            Random time data points.
+        &#34;&#34;&#34;
+
+        # determine number of time steps to create:
+        if recursion:
+            size = recursion
+
+        elif dist == &#39;powerlaw&#39; and params[0] &lt; -2.:
+            mean_sampling = (params[2]**(params[0] + 2) \
+                             - params[1]**(params[0] + 2)) \
+                             / (params[2]**(params[0] + 1) \
+                                -params[1]**(params[0] + 1)) \
+                             * (params[0] + 1) / (params[0] + 2)
+            size = int(1.2 * total_time / mean_sampling)
+            del mean_sampling
+
+        elif dist==&#39;lognormal&#39;:
+            mean_sampling = exp((params[0] + params[1]**2) / 2.)
+            size = int(1.2 * total_time / mean_sampling)
+            del mean_sampling
+
+        elif dist==&#39;ecdf&#39;:
+            mean_sampling = np.mean(params)
+            size = int(1.2 * total_time / mean_sampling)
+            del mean_sampling
+
+        else:
+            size = 100
+
+        if size &lt; 10:
+            size = 10
+
+        # create random time steps:
+        if dist==&#39;powerlaw&#39;:
+            steps = self._draw_from_powerlaw(
+                    params[0], params[1], params[2], size=size)
+
+        elif dist==&#39;lognormal&#39;:
+            steps = np.random.lognormal(
+                    mean=params[0], sigma=params[1], size=size)
+
+        elif dist==&#39;ecdf&#39;:
+            steps = self._draw_from_ecdf(params, size=size)
+
+        else:
+            raise ValueError(
+                    &#34;Distribution type &#39;{0:s}&#39; is not supported. Either set &#34; \
+                    &#34;to &#39;powerlaw&#39;, &#39;lognormal&#39;, or &#39;ecdf&#39;.&#34;.format(dist))
+
+        time = np.cumsum(steps)
+
+        # recursion, if time steps do not cover total time:
+        if time[-1] &lt; total_time:
+           size = int(ceil(2 * (1 - time[-1] / total_time) * size))
+           more = self._random_timesteps(
+                   total_time-time[-1], dist=dist, params=params,
+                   recursion=size)
+           time = np.concatenate((time, more+time[-1]))
+
+        if recursion:
+            return time
+
+        time = time[time&lt;=total_time]
+        time = np.r_[0, time]
+
+        return time
+
+    #--------------------------------------------------------------------------
+    def resample(self, time_steps, params=None):
+        &#34;&#34;&#34;Resample the artificial light curve.
+
+        Parameters
+        -----
+        time_steps : float, numpy.ndarray, or str
+            See notes for details.
+        params : list or numpy.ndarray, default=None
+            See notes for details.
+
+        Returns
+        -----
+        None
+
+        Notes
+        -----
+        This method provides several options to resample the artificial data to
+        an even or uneven time grid:
+        1. Provide a float for &#39;time_steps&#39; to resample to an even time grid.
+        2. Provide a numpy.ndarray for &#39;time steps&#39;. The light curve will be
+           resampled to these time stamps. The light curve will be cut off,
+           when the provided array exceeds the total time of the simulated
+           data. Note that the simulated data starts at time 0.
+        3. Set &#39;time_steps&#39; to &#39;ecdf&#39; and provide a numpy.ndarray of time
+           stamps to &#39;params&#39;. The method will calculate the ECDF of time steps
+           (i.e. time differences) between the provided time data and then
+           randomly draw time steps from the ECDF to construct a new series of
+           time stamps.
+        4. Set &#39;time_steps&#39; to &#39;powerlaw&#39; and provide a list of three
+           parameters to &#39;param&#39;: (1) the power-law index, (2) the lower, and
+           (3) the upper limit of the truncated distribution.
+           Time steps will be randomly drawn from this distribution to
+           construct a new series of time stamps.
+        5. Set &#39;time_steps&#39; to &#39;lognormal&#39; and provide a list of two parameters
+           to &#39;param&#39;: (1) mu and (2) sigma.
+           Time steps will be randomly drawn from this distribution to
+           construct a new series of time stamps.
+        &#34;&#34;&#34;
+
+        # even time sampling:
+        if isinstance(time_steps, float):
+            # time step is shorter than original time sampling:
+            if time_steps &lt;= self.time_orig_sampling:
+                print(&#39;Requested time step is shorter or equal to original &#39;
+                      &#39;sampling. resample() aborted.&#39;)
+                return False
+
+            # time step is a multiple of the original sampling:
+            ratio = time_steps / self.time_orig_sampling
+            if (ratio) % 1. == 0:
+                n = int(ratio)
+                self.time_res = self.time_orig[::n]
+                self.flux_res = self.flux_orig[::n]
+                self.resampled = &#39;const&#39;
+                self.time_res_total = self.time_res[-1] - self.time_res[0]
+                self.time_res_sampling = time_steps
+                self.size = self.time_res.size
+
+                if self.error_sim:
+                    self.error_sim = False
+                    self.flux_err = None
+                    self.flux_unc = None
+                    print(&#39;Note: resampling removed the error simulation.&#39;)
+
+                return True
+
+            # time step requires interpolation:
+            self.time_res = np.arange(0, self.time_orig_total, time_steps)
+            self.resampled = &#39;const&#39;
+
+        # resample to specified time steps:
+        if isinstance(time_steps, np.ndarray):
+            # check that time steps are within total time:
+            time_steps -= np.min(time_steps)
+            sel = time_steps &lt; self.time_orig_total
+            self.time_res = time_steps[sel]
+            self.resampled = &#39;specific&#39;
+
+        # draw time steps from ECDF of time steps:
+        elif time_steps == &#39;ecdf&#39;:
+            self.time_res = self._random_timesteps(
+                    self.time_orig_total, dist=&#39;ecdf&#39;, params=params)
+            self.resampled = &#39;ecdf&#39;
+
+        # draw time steps from powerlaw or log-normal distribution:
+        elif time_steps in [&#39;powerlaw&#39;, &#39;lognormal&#39;]:
+            self.time_res = self._random_timesteps(
+                    self.time_orig_total, dist=time_steps, params=params)
+            self.resampled = time_steps
+
+        else:
+            raise ValueError(&#34;Unsupported input for &#39;time_steps&#39;.&#34;)
+
+        # interpolate data:
+        self.flux_res = np.interp(
+                self.time_res, self.time_orig, self.flux_orig)
+        self.time_res_total = self.time_res[-1] - self.time_res[0]
+        time_diff = np.diff(self.time_res)
+        self.time_res_sampling = np.median(time_diff)
+        self.size = self.time_res.size
+
+    #--------------------------------------------------------------------------
+    def rescale(self, mean, std):
+        &#34;&#34;&#34;Rescale the light curves.
+
+        Parameters
+        -----
+        mean : float
+            The simulated light curves will be shifted such that they have this
+            mean value.
+        std : float
+            The simulated light curves will be scaled such that they have this
+            standard deviation.
+
+        Returns
+        -----
+        None
+
+        Raises
+        -----
+        Warning
+            Raise when the simulated light curves are of Emmanoulopoulos-type.
+
+        Notes
+        -----
+        The rescaling is applied to the originally sampled and (if applicable)
+        to the resampled data. If simulated errors were applied before, those
+        do not affect the rescaled data. New errors will be applied after the
+        rescaling.
+        &#34;&#34;&#34;
+
+        if self.lc_type == &#39;EMP&#39;:
+            raise Warning(
+                    &#34;Rescaling Emmanoulopoulos-type light curves is not &#34; \
+                    &#34;recommended.&#34;)
+
+        # rescale original and resampled data:
+        if self.resampled:
+            mean_cur = np.mean(self.flux_res)
+            std_cur = np.std(self.flux_res)
+            scale_factor = std / std_cur
+            self.flux_res = (self.flux_res - mean_cur) * scale_factor + mean
+            self.flux_orig = (self.flux_orig - mean_cur) * scale_factor + mean
+
+        # rescale original data:
+        else:
+            mean_cur = np.mean(self.flux_orig)
+            std_cur = np.std(self.flux_orig)
+            scale_factor = std / std_cur
+            self.flux_orig = (self.flux_orig - mean_cur) * scale_factor + mean
+
+        # apply new error simulation:
+        if self.error_sim:
+            self._add_errors()
+
+    #--------------------------------------------------------------------------
+    def _add_errors(self):
+        &#34;&#34;&#34;Draws random Gaussian errors and adds them to simulated data.
+
+        Returns
+        -----
+        None
+        &#34;&#34;&#34;
+
+        err = np.random.normal(loc=0, scale=self.flux_unc, size=self.size)
+
+        if self.resampled:
+            self.flux_err = self.flux_res + err
+        else:
+            self.flux_err = self.flux_orig + err
+
+    #--------------------------------------------------------------------------
+    def add_errors(self, uncertainties, params=None):
+        &#34;&#34;&#34;Add Gaussian noise to the artificial light curve.
+
+        An error term is drawn randomly for each data point from a Gaussian
+        distribution and added to the simulated data:
+
+        .. math::
+            f_{\mathrm{sim},i} \\rightarrow f_{\mathrm{sim},i} + f_{\mathrm{err},i}
+
+        with
+
+
+        .. math::
+            f_{\mathrm{err},i} \sim \\mathcal{N}(0, \sigma_i)
+
+        The noise scale sigma_i can be be the same for all data points or vary.
+
+        Parameters
+        -----
+        uncertainties : float, numpy.ndarray, or str
+            See notes for details.
+        params : list or numpy.ndarray, default=None
+            See notes for details.
+
+        Returns
+        -----
+        None
+
+        Notes
+        -----
+        This method provides several options to add homoscedastic and
+        heteroscedastic error to the artificial data:
+        1. Provide a float for &#39;uncertainties&#39; to use the same uncertainty
+           scale for each data point (homoscedasticity).
+        2. Provide a numpy.ndarray for &#39;uncertainties&#39;. The values in the array
+           are used as the uncertainty scales for each corresponding data
+           point. Note that the length of &#39;uncertainties&#39; needs to match the
+           length of the simulated light curve.
+        3. Set &#39;uncertainties&#39; to &#39;ecdf&#39; and provide a numpy.ndarray of
+           uncertainties to &#39;params&#39;. The method will calculate the ECDF of the
+           uncertainties and then randomly draw uncertainties from the ECDF.
+        4. Set &#39;uncertainties&#39; to &#39;lognormal&#39; and provide a list of two
+           parameters to &#39;param&#39;: (1) mu and (2) sigma.
+           Uncertainties are randomly drawn from this distribution.
+        &#34;&#34;&#34;
+
+        # homoscedastic uncertainties:
+        if isinstance(uncertainties, float):
+            self.flux_unc = np.ones(self.size) * uncertainties
+            self.error_sim = &#39;const&#39;
+
+        # specific uncertainties:
+        elif isinstance(uncertainties, np.ndarray) \
+                and uncertainties.size == self.size:
+            self.flux_unc = uncertainties
+            self.error_sim = &#39;specific&#39;
+
+        # draw uncertainties from ECDF of uncertainties:
+        elif uncertainties == &#39;ecdf&#39;:
+            self.flux_unc = self._draw_from_ecdf(params, size=self.size)
+            self.error_sim = &#39;ecdf&#39;
+
+        # draw uncertainties from log-normal distribution:
+        elif uncertainties == &#39;lognormal&#39;:
+            self.flux_unc = np.random.lognormal(
+                    params[0], params[1], size=self.size)
+            self.error_sim = &#39;lognormal&#39;
+
+        else:
+            raise ValueError(&#34;Unsupported input for &#39;uncertainties&#39;.&#34;)
+
+        self._add_errors()
+
+    #--------------------------------------------------------------------------
+    def data(self, get_all=False):
+        &#34;&#34;&#34;Get the simulated light curve data.
+
+        Parameters
+        -----
+        get_all : bool, default=False
+            As default returns only the final light curve data, i.e. the
+            resampled and/or noise-added light curve.
+            If True, returns all data including the original sampling.
+
+        Returns
+        -----
+        out : dict
+            Simulated light curve data.
+        &#34;&#34;&#34;
+
+        # return all light curves (original, resampled, errors added):
+        if get_all:
+            # add original light curve:
+            results = {
+                    &#39;time_orig&#39;: self.time_orig,
+                    &#39;flux_orig&#39;: self.flux_orig}
+
+            # add resampled light curve (if available):
+            if self.resampled:
+                results[&#39;time_res&#39;] = self.time_res
+                results[&#39;flux_res&#39;] = self.flux_res
+
+            # add error-added light curve (if available):
+            if self.error_sim:
+                results[&#39;flux_err&#39;] = self.flux_err
+                results[&#39;flux_unc&#39;] = self.flux_unc
+
+        # return final light curve (resampled and error-added):
+        elif self.error_sim and self.resampled:
+            results = {
+                    &#39;time&#39;: self.time_res,
+                    &#39;flux&#39;: self.flux_err,
+                    &#39;flux_unc&#39;: self.flux_unc}
+
+        # return final light curve (error-added):
+        elif self.error_sim:
+            results = {
+                    &#39;time&#39;: self.time_orig,
+                    &#39;flux&#39;: self.flux_err,
+                    &#39;flux_unc&#39;: self.flux_unc}
+
+        # return final light curve (resampled):
+        elif self.resampled:
+            results = {
+                    &#39;time&#39;: self.time_res,
+                    &#39;flux&#39;: self.flux_res}
+
+        # return final light curve (original):
+        else:
+            results = {
+                    &#39;time&#39;: self.time_orig,
+                    &#39;flux&#39;: self.flux_orig}
+
+        return results
+
+#==============================================================================
+
+class LightCurveSimulator:
+    &#34;&#34;&#34;Simulate blazar light curves as a random noise process.&#34;&#34;&#34;
+
+    #--------------------------------------------------------------------------
+    def __init__(self, time_total, time_sampling):
+        &#34;&#34;&#34;Create an instance of LightCurveSimulator.
+
+        Parameters
+        -----
+        time_total : float
+            Set the total time for the simulated data.
+        time_sampling : float
+            Set the time sampling for the simulated data.
+
+        Returns
+        -----
+        out : LightCurveSimulator-instance
+        &#34;&#34;&#34;
+
+        self.time_total = time_total
+        self.time_sampling = time_sampling
+
+        # number of data points of the simulated data:
+        self.ndp = int(ceil(time_total / time_sampling)) + 1
+
+        # create data time steps:
+        self._create_timesteps()
+
+    #--------------------------------------------------------------------------
+    def set_time_sampling(self, time_total, time_sampling):
+        &#34;&#34;&#34;Create an instance of LightCurveSimulator.
+
+        Parameters
+        -----
+        time_total : float
+            Set the total time for the simulated data.
+        time_sampling : float
+            Set the time sampling for the simulated data.
+
+        Returns
+        -----
+        None
+        &#34;&#34;&#34;
+
+        self.time_total = time_total
+        self.time_sampling = time_sampling
+
+        # number of data points of the simulated data:
+        self.ndp = int(ceil(time_total / time_sampling)) + 1
+
+        # create data time steps:
+        self._create_timesteps()
+
+    #--------------------------------------------------------------------------
+    @staticmethod
+    def suggest_time_sampling(time, average=&#39;median&#39;, factor=10.):
+        &#34;&#34;&#34;Suggests a total time and time sampling for simulated data, based on
+        input time data. The total time is increased by a given factor, the
+        time sampling reduced by the same factor, to include low and high
+        frequency power in the simulated noise process.
+
+        Parameters
+        -----
+        time : 1darray
+            Time series.
+        average : string, default=&#39;median&#39;
+            Choose average type (&#39;median&#39; or &#39;mean&#39;) for suggested sampling.
+        factor : float, default=10.
+            The suggested total time and sampling are modified by this factor.
+
+        Returns
+        -----
+        out, out : float, float
+            Suggested (minimum) total time and (maximum) sampling rate.
+        &#34;&#34;&#34;
+
+        total_time = time[-1] - time[0]
+        deltat = np.diff(time)
+        sampling_median = np.median(deltat)
+        sampling_mean = np.mean(deltat)
+        sampling_min = np.min(deltat)
+        sampling_max = np.max(deltat)
+
+        if average==&#39;median&#39;:
+            sim_sampling = sampling_median / factor
+        elif average==&#39;mean&#39;:
+            sim_sampling = sampling_mean / factor
+        sim_total = total_time * factor
+
+        print(&#39;Total time:         {0:8.3f}&#39;.format(total_time))
+        print(&#39;Min. sampling:      {0:8.3f}&#39;.format(sampling_min))
+        print(&#39;Max. sampling:      {0:8.3f}&#39;.format(sampling_max))
+        print(&#39;Mean sampling:      {0:8.3f}&#39;.format(sampling_mean))
+        print(&#39;Median sampling:    {0:8.3f}&#39;.format(sampling_median))
+        print(&#39;Suggested&#39;)
+        print(&#39;Maximum sampling:   {0:8.3f}&#39;.format(sim_sampling))
+        print(&#39;Minimum total time: {0:8.3f}&#39;.format(sim_total))
+
+        return sim_total, sim_sampling
+
+    #--------------------------------------------------------------------------
+    def _create_timesteps(self):
+        &#34;&#34;&#34;Creates time steps based on total time and time sampling.
+        &#34;&#34;&#34;
+
+        # adjust total time:
+        time_total = self.time_sampling * (self.ndp - 1)
+
+        self.time = np.linspace(0, time_total, self.ndp)
+
+    #--------------------------------------------------------------------------
+    def powerlaw(self, frequencies, index=1., amplitude=10., frequency=0.1):
+        &#34;&#34;&#34;Returns an array of amplitudes following a power-law over the input
+        frequencies.
+
+        Parameters
+        -----
+        frequencies : 1darray
+            Frequencies for which to calculate the power-law in arbitrary
+            units.
+        index : float, default=1.
+            Power-law index.
+        amplitude : float, default=10.
+            Power-law amplitude at &#39;frequency&#39; in arbitrary unit.
+        frequency : float, default=0.1
+            Frequency for the given &#39;amplitude&#39; in same unit as &#39;frequencies&#39;.
+
+        Returns
+        -----
+        out : 1darray
+            Array of same length as input &#39;frequencies&#39;.
+
+        Notes
+        -----
+        Can be used as a generic shape for the power spectrum of a simulated
+        light curve.
+        &#34;&#34;&#34;
+
+        return amplitude * np.power(frequencies / frequency, -index)
+
+    #--------------------------------------------------------------------------
+    def kneemodel(self, frequencies, index=1., amplitude=10., frequency=0.1):
+        &#34;&#34;&#34;Returns an array of amplitudes following a constant profile that
+        changes into a power-law around a given frequency.
+
+        Parameters
+        -----
+        frequencies : 1darray
+            Frequencies for which to calculate the power-law in arbitrary
+            units.
+        index : float, default=1.
+            Power-law index.
+        amplitude : float, default=10.
+            Constant amplitude at frequencies below &#39;frequency&#39; in arbitrary
+            unit.
+        frequency : float, default=0.1
+            Frequency  in same unit as &#39;frequencies&#39; at which profile changes
+            into a power-law.
+
+        Returns
+        -----
+        out : 1darray
+            Array of same length as input &#39;frequencies&#39;.
+
+        Notes
+        -----
+        Can be used as a generic shape for the power spectrum of a simulated
+        light curve.
+        &#34;&#34;&#34;
+
+        return amplitude * np.power(1 + np.power(frequencies / frequency, 2),
+                                    -index / 2.)
+
+    #--------------------------------------------------------------------------
+    def brokenpowerlaw(
+            self, frequencies, index_lo=1., index_hi=2., amplitude=10.,
+            frequency=0.1):
+        &#34;&#34;&#34;Returns an array of amplitudes following a broken power-law.
+
+        Parameters
+        -----
+        frequencies : array
+            Frequencies for which to calculate the power-law in arbitrary units.
+        index_hi : float, default=2.
+            Power-law index at frequencies lower than &#39;frequency&#39;.
+        index_lo : float, default=1.
+            Power-law index at frequencies higher than &#39;frequency&#39;.
+        frequency : float, default=0.1
+            Frequency of the power-law break in same unit as &#39;frequencies&#39;.
+        amplitude : float, default=10.
+            Amplitude at &#39;frequency&#39; in arbitrary unit.
+
+        Returns
+        -----
+            Array of same length as input &#39;frequencies&#39;.
+
+        Notes
+        -----
+        Can be used as a generic shape for the power spectrum of a simulated
+        light curve.
+        &#34;&#34;&#34;
+
+        return np.where(
+                frequencies &gt; frequency,
+                amplitude * np.power(frequencies / frequency, -index_hi),
+                amplitude * np.power(frequencies / frequency, -index_lo))
+
+    #--------------------------------------------------------------------------
+    def multi_logn(self, x, *params):
+        &#34;&#34;&#34;Multi-component log-normal function.
+
+        Returns the function values at position x.
+
+        Parameters
+        ------
+        x : float or np.ndarray
+            Function is evaluated at these positions.
+        params : list
+            Function parameters. For each log-normal component three
+            parameters: peak position, peak amplitude, peak width. For multiple
+            components append tripplets of these parameters (e.g.
+            [pos1, amp1, wid1, pos2, amp2, wid2]).
+
+        Returns
+        -----
+        out : float or np.ndarray
+            Function evaluated at x.
+
+        Notes
+        -----
+        Can be used as a generic shape for the probability density of a
+        simulated light curve.
+        &#34;&#34;&#34;
+
+        y = np.zeros_like(x)
+        for i in range(0, len(params), 3):
+            pos = params[i]
+            amp = params[i+1]
+            wid = params[i+2]
+            y = y + amp * np.exp( -((np.log(x) - np.log(pos)) / wid)**2)
+
+        return y
+
+    #--------------------------------------------------------------------------
+    def _draw_from_func(self, func, params, x_min, x_max, size=1, seed=False):
+        &#34;&#34;&#34;Draws random number from a function.
+
+        Parameters
+        -----
+        func : function
+            A function to draw random mumbers from.
+        params : list
+            The parameters of the PDF.
+        x_min : float
+            The minimum value to draw.
+        x_min : float
+            The maximum value to draw.
+        size : int, default=1
+            Number of random data points to return.
+        seed : int, default=False
+            Sets a seed for the random generator to get a reproducable result.
+            For testing only.
+
+        Returns
+        -----
+        out : np.1darray
+            Random numbers.
+
+        Notes
+        -----
+        Can be used to draw random numbers from a probability density function.
+        &#34;&#34;&#34;
+
+        x = np.linspace(x_min, x_max, 1000)
+        pdf = func(x, *params)
+        cdf = np.cumsum(pdf)
+        cdf /= cdf[-1]
+        if seed:
+            np.random.seed(seed)
+        rand = np.random.uniform(0, 1, size)
+        rand = np.interp(rand, cdf, x)
+
+        return rand
+
+    #--------------------------------------------------------------------------
+    def _sim_tk(
+            self, time_total, time_sampling, spec_shape, spec_args,
+            seed=False):
+        &#34;&#34;&#34;Helper function that is called by self.sim_tk().
+
+        This function implements the Timmer &amp; Koenig, 1995 [1] algorithm for
+        producing a single artificial light curve. See docstring of
+        self.sim_tk() for details.
+
+        Parameters
+        -----
+        time_total : float
+            Length of the simulation in arbitrary time unit.
+        time_sampling : float
+            Length of the sampling interval in same unit as &#39;time&#39;.
+        spec_shape : func
+            Function that takes an array of frequencies and &#39;spec_args&#39; as
+            input and calculates a spectrum for those frequencies.
+        spec_args : list
+            Function arguments to &#39;spec_shape&#39;.
+        seed : int, default=False
+            Sets a seed for the random generator to get a reproducable result.
+            For testing only.
+
+        Returns
+        -----
+        out : numpy.ndarray
+            Simulated light curve following a random noise process with the
+            input power spectrum.
+
+        References
+        -----
+        [1] Timmer and Koenig, 1995, &#39;On generating power law noise&#39;, A&amp;A, 300,
+            707
+        &#34;&#34;&#34;
+
+        # get number of data points:
+        ndp = int(ceil(time_total / time_sampling)) + 1
+
+        # set spectrum:
+        freq = np.fft.rfftfreq(ndp, time_sampling)
+        freq[0] = 1
+        if not callable(spec_shape):
+            spec_shape = eval(&#39;self.{0:s}&#39;.format(spec_shape))
+        spectrum = spec_shape(freq[1:], *spec_args)
+        spectrum[0] = 0
+        del freq
+
+        # random (complex) Fourier coefficients for inverse Fourier transform:
+        if seed:
+            np.random.seed(seed)
+        coef = np.random.normal(size=(2, spectrum.shape[0]))
+
+        # if N is even the Nyquist frequency is real:
+        if ndp%2 == 0:
+            coef[-1,1] = 0.
+
+        # complex coefficients:
+        coef = coef[0] + 1j * coef[1]
+
+        # scale coefficients with spectrum:
+        #coef *= np.sqrt(0.5 * spectrum) # this is how it is defined in T&amp;K95
+        #coef *= np.sqrt(0.5 * spectrum * ndp / sampling) # this is what I
+        # used in PhD thesis
+        coef *= np.sqrt(0.5 * spectrum * ndp) # this is what works to get
+        # correct PSD slope, see argument in PhD notebook
+        # 1.2_AmplitudeProblem.ipynb
+        coef *= 10**(spec_args[0] * 2.5) # this is an empirical scaling factor
+        # to get the correct amplitude (approximately; would be better to
+        # understand where this is coming from)
+
+        # inverse Fourier transform:
+        lightcurve = np.fft.irfft(coef, ndp)
+
+        # normalize to zero mean:
+        lightcurve -= np.mean(lightcurve)
+
+        return lightcurve
+
+    #--------------------------------------------------------------------------
+    def sim_tk(self, spec_shape, spec_args, nlcs=1, seed=False):
+        &#34;&#34;&#34;Simulates one/multiple equally sampled light curve(s) following a
+        random noise process with given a spectral shape of the power spectral
+        density [1].
+
+        Parameters
+        -----
+        spec_shape : func
+            Function that takes an array of frequencies and &#39;spec_args&#39; as
+            input and calculates a spectrum for those frequencies.
+        spec_args : list
+            Function arguments to &#39;spec_shape&#39;.
+        nlcs : int, default=1
+            Set the number of light curves that are produced. See notes below.
+        seed : int, default=False
+            Sets a seed for the random generator to get a reproducable result.
+            For testing only.
+
+        Returns
+        -----
+        None
+
+        Notes
+        -----
+        The method will initially produce one long light curve with a total
+        time N times longer than the final total time, where N is set by
+        &#39;nlcs&#39;. This long light curve is then split into N individual pieces.
+        Producing one initial long light curves means that power at frequencies
+        N times lower than the final total time is included in the noise
+        process. Setting ncls&gt;1 allows to include low-frequency power.
+
+        References
+        -----
+        [1] Timmer and Koenig, 1995, &#39;On generating power law noise&#39;, A&amp;A, 300,
+            707
+        &#34;&#34;&#34;
+
+        # get total time of long light curve:
+        time_total = self.time_sampling * self.ndp * nlcs
+
+        # simulate long lightcurve:
+        lightcurve = self._sim_tk(
+                time_total, self.time_sampling, spec_shape, spec_args,
+                seed=seed)
+        lightcurve = lightcurve[:-1]
+
+        # one light curve: store final data:
+        if nlcs == 1:
+            self.lightcurves = [lightcurve]
+
+        # multiple light curves: reshape to short light curves:
+        else:
+            shape = (nlcs, self.ndp)
+            lightcurves = lightcurve[:self.ndp*nlcs].reshape(shape)
+            self.lightcurves = []
+            for lc in lightcurves:
+                # normalize to zero mean:
+                lc /= np.mean(lc)
+                self.lightcurves.append(lc)
+
+        self.lc_type = &#39;TK&#39;
+        self.lc_scale = &#39;None&#39;
+
+    #--------------------------------------------------------------------------
+    def rescale(self, mean, std):
+        &#34;&#34;&#34;Rescale the light curves.
+
+        Parameters
+        -----
+        mean : float
+            The simulated light curves will be shifted such that they have this
+            mean value.
+        std : float
+            The simulated light curves will be scaled such that they have this
+            standard deviation.
+
+        Returns
+        -----
+        None
+
+        Raises
+        -----
+        Warning
+            Raise when the simulated light curves are of Emmanoulopoulos-type.
+        &#34;&#34;&#34;
+
+        if self.lc_type == &#39;EMP&#39;:
+            raise Warning(
+                    &#34;Rescaling Emmanoulopoulos-type light curves is not &#34; \
+                    &#34;recommended.&#34;)
+
+        for i, lightcurve in enumerate(self.lightcurves):
+            mean_cur = lightcurve.mean()
+            std_cur = lightcurve.std()
+            scale_factor = std / std_cur
+            self.lightcurves[i] = (lightcurve - mean_cur) * scale_factor + mean
+
+    #--------------------------------------------------------------------------
+    def _adjust_pdf(
+            self, lightcurve, pdf, pdf_params=None, pdf_range=None,
+            iterations=100, keep_non_converged=False, threshold=0.01):
+        &#34;&#34;&#34;Helper function that is called by self.adjust_pdf().
+
+        This function implements the Emmanoulopoulos et al, 2013 [1] algorithm
+        for changing the PDF of a light curve while maintaining its PSD. See
+        docstring of self.adjust_pdf() for details.
+
+        Parameters
+        -----
+        lightcurve : numpy.ndarray
+            Flux density data of an evenly sampled light curve.
+        pdf : numpy.ndarray or callable
+            When providing flux data in a numpy.array the method will calculate
+            an ECDF of the input data and draw random flux values from that
+            ECDF.
+            When providing a callable function the method will use that
+            function to draw random flux values. Parameters for the function
+            need to be provided in &#39;pdf_params&#39;
+        pdf_params : list, default=None
+            When a callable function is given to &#39;pdf&#39;, corresponding
+            parameters need to be given to &#39;pdf_params&#39;.
+        pdf_range : list
+            List of two elements. Random flux values will be drawn from the
+            given PDF between the two limits provided by &#39;pdf_range&#39;. Required
+            only when a callable function is given to &#39;pdf&#39;. Does not have an
+            effect, when a numpy.ndarray is given to &#39;pdf&#39;.
+        iterations : int, default=100
+            The algorithm [1] is iterative. This value sets a maximum number of
+            iterations to avoid infinite loops.
+        keep_non_converged : bool or str, default=False
+            If True the result is returned even if the algorithm [1] did not
+            converge.
+            If False and the algorithm [1] did not converge, False is returned.
+            If set to &#39;ask&#39;, a notification is written asking how to proceed.
+        threshold : float, default=0.01
+            Defines when the algorithm [1] is considered as converged.
+            Iterations are stopped when maximum difference between the current
+            and the previous light curve does not exceed this &#39;threshold&#39;.
+
+        Returns
+        -----
+        out : numpy.ndarray
+            Simulated light curve with the target PDF.
+
+        References
+        -----
+        [1] Emmanoulopoulos et al, 2013, MNRAS, 433, 907
+        &#34;&#34;&#34;
+
+        # discrete Fourier transform:
+        dft_norm = np.fft.rfft(lightcurve)
+        ampl_adj = np.absolute(dft_norm)
+
+        # create artificial light curve based on ECDF of input data:
+        if isinstance(pdf, np.ndarray):
+            ecdf = ECDF(pdf)
+            lc_sim = np.interp(np.random.uniform(ecdf.y[1], 1., size=self.ndp),
+                               ecdf.y, ecdf.x)
+
+        # or create artificial light curve based on model PDF:
+        elif callable(pdf):
+            lc_sim = self._draw_from_func(
+                    pdf, pdf_params, pdf_range[0], pdf_range[1], size=self.ndp)
+
+        else:
+            raise ValueError(
+                    &#34;&#39;pdf&#39; needs to be a np.ndarray or a function.&#34;)
+
+        # iteration:
+        for i in range(iterations):
+            # calculate DFT, amplitudes:
+            dft_sim = np.fft.rfft(lc_sim)
+            ampl_sim = np.absolute(dft_sim)
+
+            # spectral adjustment:
+            dft_adj = dft_sim / ampl_sim * ampl_adj
+            lc_adj = np.fft.irfft(dft_adj, n=self.ndp)
+
+            # amplitude adjustment:
+            a = np.argsort(lc_adj)
+            s = np.argsort(lc_sim)
+            lc_adj[a] = lc_sim[s]
+
+            # check if process converged:
+            if np.max(np.absolute(lc_adj -lc_sim) / lc_sim) &lt; threshold:
+                break
+            else:
+                lc_sim = deepcopy(lc_adj)
+
+        # no convergence reached:
+        else:
+            # ask what to do:
+            if keep_non_converged == &#39;ask&#39;:
+                inp = raw_input(
+                        &#39;No convergence reached within {0:d} iterations. &#39; \
+                        &#39;Keep (y), throw away (n), or try again (r)?&#39;.format(
+                                iterations))
+                if inp == &#39;y&#39;:
+                    pass
+                elif inp == &#39;r&#39;:
+                    lc_sim = self._adjust_pdf(
+                            lightcurve, pdf, pdf_params=pdf_params,
+                            pdf_range=pdf_range, iterations=iterations,
+                            keep_non_converged=keep_non_converged,
+                            threshold=threshold)
+                else:
+                    lc_sim = False
+
+            # keep result anyway:
+            elif keep_non_converged:
+                pass
+
+            # return False:
+            else:
+                lc_sim = False
+
+        return lc_sim
+
+    #--------------------------------------------------------------------------
+    def adjust_pdf(
+            self, pdf, pdf_params=None, pdf_range=None, iterations=100,
+            keep_non_converged=False, threshold=0.01):
+        &#34;&#34;&#34;Change the PDF of all simulated light curves to a target PDF.
+
+        This method implements the Emmanoulopoulos et al, 2013 [1] algorithm
+        for changing the PDF of a light curve while maintaining its PSD. This
+        routine is automatically applied to all simulated light curves stored
+        in the an LightCurveSimulator-instance.
+
+        Parameters
+        -----
+        pdf : numpy.ndarray or callable
+            When providing flux data in a numpy.array the method will calculate
+            an ECDF of the input data and draw random flux values from that
+            ECDF.
+            When providing a callable function the method will use that
+            function to draw random flux values. Parameters for the function
+            need to be provided in &#39;pdf_params&#39;
+        pdf_params : list, default=None
+            When a callable function is given to &#39;pdf&#39;, corresponding
+            parameters need to be given to &#39;pdf_params&#39;.
+        pdf_range : list
+            List of two elements. Random flux values will be drawn from the
+            given PDF between the two limits provided by &#39;pdf_range&#39;. Required
+            only when a callable function is given to &#39;pdf&#39;. Does not have an
+            effect, when a numpy.ndarray is given to &#39;pdf&#39;.
+        iterations : int, default=100
+            The algorithm [1] is iterative. This value sets a maximum number of
+            iterations to avoid infinite loops.
+        keep_non_converged : bool or str, default=False
+            If True the result is returned even if the algorithm [1] did not
+            converge.
+            If False and the algorithm [1] did not converge, False is returned.
+            If set to &#39;ask&#39;, a notification is written asking how to proceed.
+        threshold : float, default=0.01
+            Defines when the algorithm [1] is considered as converged.
+            Iterations are stopped when maximum difference between the current
+            and the previous light curve does not exceed this &#39;threshold&#39;.
+
+        Returns
+        -----
+        None
+
+        References
+        -----
+        [1] Emmanoulopoulos et al, 2013, MNRAS, 433, 907
+        &#34;&#34;&#34;
+
+        # check that the PDFs have not been adjusted yet:
+        if self.lc_type == &#39;EMP&#39;:
+            print(&#39;Light curve PDFs have already been adjusted. &#39; \
+                  &#39;adjust_pdf() aborted!&#39;)
+            return None
+
+        # iterate through light curves:
+        for i, lc in enumerate(self.lightcurves):
+            lc_adj = self._adjust_pdf(
+                    lc, pdf, pdf_params=pdf_params, pdf_range=pdf_range,
+                    iterations=iterations,
+                    keep_non_converged=keep_non_converged, threshold=threshold)
+            self.lightcurves[i] = lc_adj
+
+        # remove non-converged light curves:
+        self.lightcurves = [lc for lc in self.lightcurves if lc is not False]
+
+        self.lc_type = &#39;EMP&#39;
+        if isinstance(pdf, ECDF):
+            self.lc_scale = &#39;ECDF&#39;
+        elif callable(pdf):
+            self.lc_scale = &#39;PDF&#39;
+        else:
+            self.lc_scale = False
+
+    #--------------------------------------------------------------------------
+    def sim_emp(
+            self, spec_shape, spec_args, pdf, pdf_params=None, pdf_range=None,
+            nlcs=1,  iterations=100, keep_non_converged=False, threshold=0.01):
+        &#34;&#34;&#34;Create a simulated light curve with a specified PSD and PDF.
+
+        This method combines the two steps of producting a Gaussian light curve
+        with a given PSD [1] and adjusting its PDF to a specified PDF [2].
+
+        Parameters
+        -----
+        spec_shape : func
+            Function that takes an array of frequencies and &#39;spec_args&#39; as
+            input and calculates a spectrum for those frequencies.
+        spec_args : list
+            Function arguments to &#39;spec_shape&#39;.
+        pdf : numpy.ndarray or callable
+            When providing flux data in a numpy.array the method will calculate
+            an ECDF of the input data and draw random flux values from that
+            ECDF.
+            When providing a callable function the method will use that
+            function to draw random flux values. Parameters for the function
+            need to be provided in &#39;pdf_params&#39;
+        pdf_params : list, default=None
+            When a callable function is given to &#39;pdf&#39;, corresponding
+            parameters need to be given to &#39;pdf_params&#39;.
+        pdf_range : list
+            List of two elements. Random flux values will be drawn from the
+            given PDF between the two limits provided by &#39;pdf_range&#39;. Required
+            only when a callable function is given to &#39;pdf&#39;. Does not have an
+            effect, when a numpy.ndarray is given to &#39;pdf&#39;.
+        nlcs : int, default=1
+            Set the number of light curves that are produced. See notes below.
+        iterations : int, default=100
+            The algorithm [1] is iterative. This value sets a maximum number of
+            iterations to avoid infinite loops.
+        keep_non_converged : bool or str, default=False
+            If True the result is returned even if the algorithm [1] did not
+            converge.
+            If False and the algorithm [1] did not converge, False is returned.
+            If set to &#39;ask&#39;, a notification is written asking how to proceed.
+        threshold : float, default=0.01
+            Defines when the algorithm [1] is considered as converged.
+            Iterations are stopped when maximum difference between the current
+            and the previous light curve does not exceed this &#39;threshold&#39;.
+
+        Returns
+        -----
+        None
+
+        Notes
+        -----
+        The method will initially produce one long Gaussian light curve with a
+        total time N times longer than the final total time, where N is set by
+        &#39;nlcs&#39;. This long light curve is then split into N individual pieces.
+        Producing one initial long light curves means that power at frequencies
+        N times lower than the final total time is included in the noise
+        process. Setting ncls&gt;1 allows to include low-frequency power.
+        The adjustment of the PDF is then applied to every split light curve
+        individually.
+
+        References
+        -----
+        [1] Timmer and Koenig, 1995, &#39;On generating power law noise&#39;, A&amp;A, 300,
+            707
+        [2] Emmanoulopoulos et al, 2013, MNRAS, 433, 907
+        &#34;&#34;&#34;
+
+        self.sim_tk(spec_shape, spec_args, nlcs=nlcs)
+        self.adjust_pdf(
+                pdf, pdf_params=pdf_params, pdf_range=pdf_range,
+                iterations=iterations, keep_non_converged=keep_non_converged,
+                threshold=threshold)
+
+    #--------------------------------------------------------------------------
+    def get_lcs(self):
+        &#34;&#34;&#34;Returns the simulated light curves.
+
+        Parameters
+        -----
+        None
+
+        Returns
+        -----
+        out : list
+            List of simulated light curves, each an ArtificialLightCurve
+            instance.
+        &#34;&#34;&#34;
+
+        lcs = [ArtificialLightCurve(self.time, flux, self.lc_type) \
+               for flux in self.lightcurves]
+
+        return lcs</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="lcsim.ArtificialLightCurve"><code class="flex name class">
+<span>class <span class="ident">ArtificialLightCurve</span></span>
+<span>(</span><span>time, flux, lc_type)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Process an artificial light curve.</p>
+<p>Create an instance of ArtificialLightCurve.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>time</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>Time steps.</dd>
+<dt><strong><code>flux</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>Flux values.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>out</code></strong> :&ensp;<code>ArtificialLightCurve-instance</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ArtificialLightCurve:
+    &#34;&#34;&#34;Process an artificial light curve.&#34;&#34;&#34;
+
+    #--------------------------------------------------------------------------
+    def __init__(self, time, flux, lc_type):
+        &#34;&#34;&#34;Create an instance of ArtificialLightCurve.
+
+        Parameters
+        -----
+        time : np.ndarray
+            Time steps.
+        flux : np.ndarray
+            Flux values.
+
+        Returns
+        -----
+        out : ArtificialLightCurve-instance
+        &#34;&#34;&#34;
+
+        self.time_orig = time
+        self.flux_orig = flux
+        self.lc_type = lc_type
+        self.time_orig_total = time[-1] - time[0]
+        self.time_orig_sampling = time[1] - time[0]
+        self.size = self.time_orig.size
+
+        self.resampled = False
+        self.time_res = None
+        self.flux_res = None
+        self.time_res_total = None
+        self.time_res_sampling = None
+
+        self.error_sim = False
+        self.flux_err = None
+        self.flux_unc = None
+
+    #--------------------------------------------------------------------------
+    def __str__(self):
+        &#34;&#34;&#34;Returns gereneral information about the simulated data.
+        &#34;&#34;&#34;
+
+        text = &#39;Artificial light curve\n&#39;
+        text += &#39;Simulation type:        {0:&gt;10s}\n&#39;.format(self.lc_type)
+        text += &#39;Original time sampling: {0:10.3f}\n&#39;.format(
+                self.time_orig_sampling)
+        text += &#39;Original total time:    {0:10.3f}\n&#39;.format(
+                self.time_orig_total)
+
+        if self.resampled == &#39;const&#39;:
+            text += &#39;Resampled-------------------------\n&#39;
+            text += &#39;Time steps:             {0:&gt;10s}\n&#39;.format(&#39;even&#39;)
+            text += &#39;Time sampling:          {0:10.3f}\n&#39;.format(
+                    self.time_res_sampling)
+            text += &#39;Total time:             {0:10.3f}\n&#39;.format(
+                    self.time_res_total)
+        elif self.resampled in [&#39;powerlaw&#39;, &#39;lognormal&#39;, &#39;ecdf&#39;, &#39;specific&#39;]:
+            text += &#39;Resampled-------------------------\n&#39;
+            text += &#39;Time steps:             {0:&gt;10s}\n&#39;.format(&#39;uneven&#39;)
+            text += &#39;Distribution:           {0:&gt;10s}\n&#39;.format(self.resampled)
+            text += &#39;Median time sampling:   {0:10.3f}\n&#39;.format(
+                    self.time_res_sampling)
+            text += &#39;Total time:             {0:10.3f}\n&#39;.format(
+                    self.time_res_total)
+
+        if self.error_sim == &#39;const&#39;:
+            text += &#39;Gaussian noise added--------------\n&#39;
+            text += &#39;Uncertainties:  {0:&gt;18s}\n&#39;.format(&#39;homoscedastic&#39;)
+            text += &#39;Median uncertainty:     {0:10.3f}\n&#39;.format(
+                    np.median(self.flux_unc))
+
+        if self.error_sim in [&#39;specific&#39;, &#39;ecdf&#39;, &#39;lognormal&#39;]:
+            text += &#39;Gaussian noise added--------------\n&#39;
+            text += &#39;Uncertainties:  {0:&gt;18s}\n&#39;.format(&#39;heteroscedastic&#39;)
+            text += &#39;Distribution:   {0:&gt;18s}\n&#39;.format(self.error_sim)
+            text += &#39;Median uncertainty:     {0:10.3f}\n&#39;.format(
+                    np.median(self.flux_unc))
+
+        return text
+
+    #--------------------------------------------------------------------------
+    def _draw_from_powerlaw(self, index, minval, maxval, size=1):
+        &#34;&#34;&#34;Draws random numbers from a truncated power-law distribution.
+
+        Parameters
+        -----
+        index : float
+            Power-law index.
+        minval : float
+            Lower limit of the distribution.
+        maxval : float
+            Upper limit of the distribution.
+        size : int, default=1
+            Number of random data points to return.
+
+        Returns
+        -----
+        out : np.1darray
+            Random numbers.
+        &#34;&#34;&#34;
+
+        index = index + 1.
+
+        return np.power((maxval**index - minval**index) \
+                        * np.random.uniform(size=size) + minval**index,
+                        1. / index)
+
+    #--------------------------------------------------------------------------
+    def _draw_from_ecdf(self, data, size=1):
+        &#34;&#34;&#34;Draws random number from an empirical cumulative distribution
+        function (ECDF) defined by given data.
+
+        Parameters
+        -----
+        data : np.1darray
+            The data which defines the ECDF.
+        size : int, default=1
+            Number of random data points to return.
+
+        Returns
+        -----
+        out : np.1darray
+            Random numbers.
+        &#34;&#34;&#34;
+
+        ecdf = ECDF(data)
+        draw = np.random.uniform(low=ecdf.y[1], size=size)
+
+        return np.interp(draw, ecdf.y, ecdf.x)
+
+    #--------------------------------------------------------------------------
+    def _random_timesteps(
+            self, total_time, dist=&#39;powerlaw&#39;, params=None, recursion=0):
+        &#34;&#34;&#34;Creates random time data points with time steps following a given
+        distribution.
+
+        Parameters
+        -----
+        total_time : float
+            The total time to cover by the time data points
+        dist : str, default=&#39;powerlaw&#39;
+            Defines the distribution the time steps are drawn from. Choose from
+            truncated &#39;powerlaw&#39;, &#39;lognormal&#39; and &#39;ecdf&#39;. The distribution
+            parameters need to be set accordingly in the &#39;params&#39;.
+        params : list
+            A list of distribution parameters.
+            For &#39;powerlaw&#39; give (1) the power-law index, (2) the lower, and (3)
+            the upper limit of the truncated distribution.
+            For &#39;lognormal&#39; give the distribution (1) mu and (2) sigma.
+            For &#39;ecdf&#39; give an array of time steps (differences between time
+            data points not the time data points!).
+        recursion : int, default=0
+            Do not manually set a value. This parameter is needed internally
+            when the drawn time steps are not enough to cover the targeted
+            total time and a recursion call of the function is necessery.
+
+        Returns
+        -----
+        out : np.1darray
+            Random time data points.
+        &#34;&#34;&#34;
+
+        # determine number of time steps to create:
+        if recursion:
+            size = recursion
+
+        elif dist == &#39;powerlaw&#39; and params[0] &lt; -2.:
+            mean_sampling = (params[2]**(params[0] + 2) \
+                             - params[1]**(params[0] + 2)) \
+                             / (params[2]**(params[0] + 1) \
+                                -params[1]**(params[0] + 1)) \
+                             * (params[0] + 1) / (params[0] + 2)
+            size = int(1.2 * total_time / mean_sampling)
+            del mean_sampling
+
+        elif dist==&#39;lognormal&#39;:
+            mean_sampling = exp((params[0] + params[1]**2) / 2.)
+            size = int(1.2 * total_time / mean_sampling)
+            del mean_sampling
+
+        elif dist==&#39;ecdf&#39;:
+            mean_sampling = np.mean(params)
+            size = int(1.2 * total_time / mean_sampling)
+            del mean_sampling
+
+        else:
+            size = 100
+
+        if size &lt; 10:
+            size = 10
+
+        # create random time steps:
+        if dist==&#39;powerlaw&#39;:
+            steps = self._draw_from_powerlaw(
+                    params[0], params[1], params[2], size=size)
+
+        elif dist==&#39;lognormal&#39;:
+            steps = np.random.lognormal(
+                    mean=params[0], sigma=params[1], size=size)
+
+        elif dist==&#39;ecdf&#39;:
+            steps = self._draw_from_ecdf(params, size=size)
+
+        else:
+            raise ValueError(
+                    &#34;Distribution type &#39;{0:s}&#39; is not supported. Either set &#34; \
+                    &#34;to &#39;powerlaw&#39;, &#39;lognormal&#39;, or &#39;ecdf&#39;.&#34;.format(dist))
+
+        time = np.cumsum(steps)
+
+        # recursion, if time steps do not cover total time:
+        if time[-1] &lt; total_time:
+           size = int(ceil(2 * (1 - time[-1] / total_time) * size))
+           more = self._random_timesteps(
+                   total_time-time[-1], dist=dist, params=params,
+                   recursion=size)
+           time = np.concatenate((time, more+time[-1]))
+
+        if recursion:
+            return time
+
+        time = time[time&lt;=total_time]
+        time = np.r_[0, time]
+
+        return time
+
+    #--------------------------------------------------------------------------
+    def resample(self, time_steps, params=None):
+        &#34;&#34;&#34;Resample the artificial light curve.
+
+        Parameters
+        -----
+        time_steps : float, numpy.ndarray, or str
+            See notes for details.
+        params : list or numpy.ndarray, default=None
+            See notes for details.
+
+        Returns
+        -----
+        None
+
+        Notes
+        -----
+        This method provides several options to resample the artificial data to
+        an even or uneven time grid:
+        1. Provide a float for &#39;time_steps&#39; to resample to an even time grid.
+        2. Provide a numpy.ndarray for &#39;time steps&#39;. The light curve will be
+           resampled to these time stamps. The light curve will be cut off,
+           when the provided array exceeds the total time of the simulated
+           data. Note that the simulated data starts at time 0.
+        3. Set &#39;time_steps&#39; to &#39;ecdf&#39; and provide a numpy.ndarray of time
+           stamps to &#39;params&#39;. The method will calculate the ECDF of time steps
+           (i.e. time differences) between the provided time data and then
+           randomly draw time steps from the ECDF to construct a new series of
+           time stamps.
+        4. Set &#39;time_steps&#39; to &#39;powerlaw&#39; and provide a list of three
+           parameters to &#39;param&#39;: (1) the power-law index, (2) the lower, and
+           (3) the upper limit of the truncated distribution.
+           Time steps will be randomly drawn from this distribution to
+           construct a new series of time stamps.
+        5. Set &#39;time_steps&#39; to &#39;lognormal&#39; and provide a list of two parameters
+           to &#39;param&#39;: (1) mu and (2) sigma.
+           Time steps will be randomly drawn from this distribution to
+           construct a new series of time stamps.
+        &#34;&#34;&#34;
+
+        # even time sampling:
+        if isinstance(time_steps, float):
+            # time step is shorter than original time sampling:
+            if time_steps &lt;= self.time_orig_sampling:
+                print(&#39;Requested time step is shorter or equal to original &#39;
+                      &#39;sampling. resample() aborted.&#39;)
+                return False
+
+            # time step is a multiple of the original sampling:
+            ratio = time_steps / self.time_orig_sampling
+            if (ratio) % 1. == 0:
+                n = int(ratio)
+                self.time_res = self.time_orig[::n]
+                self.flux_res = self.flux_orig[::n]
+                self.resampled = &#39;const&#39;
+                self.time_res_total = self.time_res[-1] - self.time_res[0]
+                self.time_res_sampling = time_steps
+                self.size = self.time_res.size
+
+                if self.error_sim:
+                    self.error_sim = False
+                    self.flux_err = None
+                    self.flux_unc = None
+                    print(&#39;Note: resampling removed the error simulation.&#39;)
+
+                return True
+
+            # time step requires interpolation:
+            self.time_res = np.arange(0, self.time_orig_total, time_steps)
+            self.resampled = &#39;const&#39;
+
+        # resample to specified time steps:
+        if isinstance(time_steps, np.ndarray):
+            # check that time steps are within total time:
+            time_steps -= np.min(time_steps)
+            sel = time_steps &lt; self.time_orig_total
+            self.time_res = time_steps[sel]
+            self.resampled = &#39;specific&#39;
+
+        # draw time steps from ECDF of time steps:
+        elif time_steps == &#39;ecdf&#39;:
+            self.time_res = self._random_timesteps(
+                    self.time_orig_total, dist=&#39;ecdf&#39;, params=params)
+            self.resampled = &#39;ecdf&#39;
+
+        # draw time steps from powerlaw or log-normal distribution:
+        elif time_steps in [&#39;powerlaw&#39;, &#39;lognormal&#39;]:
+            self.time_res = self._random_timesteps(
+                    self.time_orig_total, dist=time_steps, params=params)
+            self.resampled = time_steps
+
+        else:
+            raise ValueError(&#34;Unsupported input for &#39;time_steps&#39;.&#34;)
+
+        # interpolate data:
+        self.flux_res = np.interp(
+                self.time_res, self.time_orig, self.flux_orig)
+        self.time_res_total = self.time_res[-1] - self.time_res[0]
+        time_diff = np.diff(self.time_res)
+        self.time_res_sampling = np.median(time_diff)
+        self.size = self.time_res.size
+
+    #--------------------------------------------------------------------------
+    def rescale(self, mean, std):
+        &#34;&#34;&#34;Rescale the light curves.
+
+        Parameters
+        -----
+        mean : float
+            The simulated light curves will be shifted such that they have this
+            mean value.
+        std : float
+            The simulated light curves will be scaled such that they have this
+            standard deviation.
+
+        Returns
+        -----
+        None
+
+        Raises
+        -----
+        Warning
+            Raise when the simulated light curves are of Emmanoulopoulos-type.
+
+        Notes
+        -----
+        The rescaling is applied to the originally sampled and (if applicable)
+        to the resampled data. If simulated errors were applied before, those
+        do not affect the rescaled data. New errors will be applied after the
+        rescaling.
+        &#34;&#34;&#34;
+
+        if self.lc_type == &#39;EMP&#39;:
+            raise Warning(
+                    &#34;Rescaling Emmanoulopoulos-type light curves is not &#34; \
+                    &#34;recommended.&#34;)
+
+        # rescale original and resampled data:
+        if self.resampled:
+            mean_cur = np.mean(self.flux_res)
+            std_cur = np.std(self.flux_res)
+            scale_factor = std / std_cur
+            self.flux_res = (self.flux_res - mean_cur) * scale_factor + mean
+            self.flux_orig = (self.flux_orig - mean_cur) * scale_factor + mean
+
+        # rescale original data:
+        else:
+            mean_cur = np.mean(self.flux_orig)
+            std_cur = np.std(self.flux_orig)
+            scale_factor = std / std_cur
+            self.flux_orig = (self.flux_orig - mean_cur) * scale_factor + mean
+
+        # apply new error simulation:
+        if self.error_sim:
+            self._add_errors()
+
+    #--------------------------------------------------------------------------
+    def _add_errors(self):
+        &#34;&#34;&#34;Draws random Gaussian errors and adds them to simulated data.
+
+        Returns
+        -----
+        None
+        &#34;&#34;&#34;
+
+        err = np.random.normal(loc=0, scale=self.flux_unc, size=self.size)
+
+        if self.resampled:
+            self.flux_err = self.flux_res + err
+        else:
+            self.flux_err = self.flux_orig + err
+
+    #--------------------------------------------------------------------------
+    def add_errors(self, uncertainties, params=None):
+        &#34;&#34;&#34;Add Gaussian noise to the artificial light curve.
+
+        An error term is drawn randomly for each data point from a Gaussian
+        distribution and added to the simulated data:
+
+        .. math::
+            f_{\mathrm{sim},i} \\rightarrow f_{\mathrm{sim},i} + f_{\mathrm{err},i}
+
+        with
+
+
+        .. math::
+            f_{\mathrm{err},i} \sim \\mathcal{N}(0, \sigma_i)
+
+        The noise scale sigma_i can be be the same for all data points or vary.
+
+        Parameters
+        -----
+        uncertainties : float, numpy.ndarray, or str
+            See notes for details.
+        params : list or numpy.ndarray, default=None
+            See notes for details.
+
+        Returns
+        -----
+        None
+
+        Notes
+        -----
+        This method provides several options to add homoscedastic and
+        heteroscedastic error to the artificial data:
+        1. Provide a float for &#39;uncertainties&#39; to use the same uncertainty
+           scale for each data point (homoscedasticity).
+        2. Provide a numpy.ndarray for &#39;uncertainties&#39;. The values in the array
+           are used as the uncertainty scales for each corresponding data
+           point. Note that the length of &#39;uncertainties&#39; needs to match the
+           length of the simulated light curve.
+        3. Set &#39;uncertainties&#39; to &#39;ecdf&#39; and provide a numpy.ndarray of
+           uncertainties to &#39;params&#39;. The method will calculate the ECDF of the
+           uncertainties and then randomly draw uncertainties from the ECDF.
+        4. Set &#39;uncertainties&#39; to &#39;lognormal&#39; and provide a list of two
+           parameters to &#39;param&#39;: (1) mu and (2) sigma.
+           Uncertainties are randomly drawn from this distribution.
+        &#34;&#34;&#34;
+
+        # homoscedastic uncertainties:
+        if isinstance(uncertainties, float):
+            self.flux_unc = np.ones(self.size) * uncertainties
+            self.error_sim = &#39;const&#39;
+
+        # specific uncertainties:
+        elif isinstance(uncertainties, np.ndarray) \
+                and uncertainties.size == self.size:
+            self.flux_unc = uncertainties
+            self.error_sim = &#39;specific&#39;
+
+        # draw uncertainties from ECDF of uncertainties:
+        elif uncertainties == &#39;ecdf&#39;:
+            self.flux_unc = self._draw_from_ecdf(params, size=self.size)
+            self.error_sim = &#39;ecdf&#39;
+
+        # draw uncertainties from log-normal distribution:
+        elif uncertainties == &#39;lognormal&#39;:
+            self.flux_unc = np.random.lognormal(
+                    params[0], params[1], size=self.size)
+            self.error_sim = &#39;lognormal&#39;
+
+        else:
+            raise ValueError(&#34;Unsupported input for &#39;uncertainties&#39;.&#34;)
+
+        self._add_errors()
+
+    #--------------------------------------------------------------------------
+    def data(self, get_all=False):
+        &#34;&#34;&#34;Get the simulated light curve data.
+
+        Parameters
+        -----
+        get_all : bool, default=False
+            As default returns only the final light curve data, i.e. the
+            resampled and/or noise-added light curve.
+            If True, returns all data including the original sampling.
+
+        Returns
+        -----
+        out : dict
+            Simulated light curve data.
+        &#34;&#34;&#34;
+
+        # return all light curves (original, resampled, errors added):
+        if get_all:
+            # add original light curve:
+            results = {
+                    &#39;time_orig&#39;: self.time_orig,
+                    &#39;flux_orig&#39;: self.flux_orig}
+
+            # add resampled light curve (if available):
+            if self.resampled:
+                results[&#39;time_res&#39;] = self.time_res
+                results[&#39;flux_res&#39;] = self.flux_res
+
+            # add error-added light curve (if available):
+            if self.error_sim:
+                results[&#39;flux_err&#39;] = self.flux_err
+                results[&#39;flux_unc&#39;] = self.flux_unc
+
+        # return final light curve (resampled and error-added):
+        elif self.error_sim and self.resampled:
+            results = {
+                    &#39;time&#39;: self.time_res,
+                    &#39;flux&#39;: self.flux_err,
+                    &#39;flux_unc&#39;: self.flux_unc}
+
+        # return final light curve (error-added):
+        elif self.error_sim:
+            results = {
+                    &#39;time&#39;: self.time_orig,
+                    &#39;flux&#39;: self.flux_err,
+                    &#39;flux_unc&#39;: self.flux_unc}
+
+        # return final light curve (resampled):
+        elif self.resampled:
+            results = {
+                    &#39;time&#39;: self.time_res,
+                    &#39;flux&#39;: self.flux_res}
+
+        # return final light curve (original):
+        else:
+            results = {
+                    &#39;time&#39;: self.time_orig,
+                    &#39;flux&#39;: self.flux_orig}
+
+        return results</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="lcsim.ArtificialLightCurve.add_errors"><code class="name flex">
+<span>def <span class="ident">add_errors</span></span>(<span>self, uncertainties, params=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Add Gaussian noise to the artificial light curve.</p>
+<p>An error term is drawn randomly for each data point from a Gaussian
+distribution and added to the simulated data:</p>
+<p>[ f_{\mathrm{sim},i} \rightarrow f_{\mathrm{sim},i} + f_{\mathrm{err},i} ]
+with</p>
+<p>[ f_{\mathrm{err},i} \sim \mathcal{N}(0, \sigma_i) ]
+The noise scale sigma_i can be be the same for all data points or vary.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>uncertainties</code></strong> :&ensp;<code>float, numpy.ndarray,</code> or <code>str</code></dt>
+<dd>See notes for details.</dd>
+<dt><strong><code>params</code></strong> :&ensp;<code>list</code> or <code>numpy.ndarray</code>, default=<code>None</code></dt>
+<dd>See notes for details.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>None</code></dt>
+<dd>&nbsp;</dd>
+</dl>
+<h2 id="notes">Notes</h2>
+<p>This method provides several options to add homoscedastic and
+heteroscedastic error to the artificial data:
+1. Provide a float for 'uncertainties' to use the same uncertainty
+scale for each data point (homoscedasticity).
+2. Provide a numpy.ndarray for 'uncertainties'. The values in the array
+are used as the uncertainty scales for each corresponding data
+point. Note that the length of 'uncertainties' needs to match the
+length of the simulated light curve.
+3. Set 'uncertainties' to 'ecdf' and provide a numpy.ndarray of
+uncertainties to 'params'. The method will calculate the ECDF of the
+uncertainties and then randomly draw uncertainties from the ECDF.
+4. Set 'uncertainties' to 'lognormal' and provide a list of two
+parameters to 'param': (1) mu and (2) sigma.
+Uncertainties are randomly drawn from this distribution.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_errors(self, uncertainties, params=None):
+    &#34;&#34;&#34;Add Gaussian noise to the artificial light curve.
+
+    An error term is drawn randomly for each data point from a Gaussian
+    distribution and added to the simulated data:
+
+    .. math::
+        f_{\mathrm{sim},i} \\rightarrow f_{\mathrm{sim},i} + f_{\mathrm{err},i}
+
+    with
+
+
+    .. math::
+        f_{\mathrm{err},i} \sim \\mathcal{N}(0, \sigma_i)
+
+    The noise scale sigma_i can be be the same for all data points or vary.
+
+    Parameters
+    -----
+    uncertainties : float, numpy.ndarray, or str
+        See notes for details.
+    params : list or numpy.ndarray, default=None
+        See notes for details.
+
+    Returns
+    -----
+    None
+
+    Notes
+    -----
+    This method provides several options to add homoscedastic and
+    heteroscedastic error to the artificial data:
+    1. Provide a float for &#39;uncertainties&#39; to use the same uncertainty
+       scale for each data point (homoscedasticity).
+    2. Provide a numpy.ndarray for &#39;uncertainties&#39;. The values in the array
+       are used as the uncertainty scales for each corresponding data
+       point. Note that the length of &#39;uncertainties&#39; needs to match the
+       length of the simulated light curve.
+    3. Set &#39;uncertainties&#39; to &#39;ecdf&#39; and provide a numpy.ndarray of
+       uncertainties to &#39;params&#39;. The method will calculate the ECDF of the
+       uncertainties and then randomly draw uncertainties from the ECDF.
+    4. Set &#39;uncertainties&#39; to &#39;lognormal&#39; and provide a list of two
+       parameters to &#39;param&#39;: (1) mu and (2) sigma.
+       Uncertainties are randomly drawn from this distribution.
+    &#34;&#34;&#34;
+
+    # homoscedastic uncertainties:
+    if isinstance(uncertainties, float):
+        self.flux_unc = np.ones(self.size) * uncertainties
+        self.error_sim = &#39;const&#39;
+
+    # specific uncertainties:
+    elif isinstance(uncertainties, np.ndarray) \
+            and uncertainties.size == self.size:
+        self.flux_unc = uncertainties
+        self.error_sim = &#39;specific&#39;
+
+    # draw uncertainties from ECDF of uncertainties:
+    elif uncertainties == &#39;ecdf&#39;:
+        self.flux_unc = self._draw_from_ecdf(params, size=self.size)
+        self.error_sim = &#39;ecdf&#39;
+
+    # draw uncertainties from log-normal distribution:
+    elif uncertainties == &#39;lognormal&#39;:
+        self.flux_unc = np.random.lognormal(
+                params[0], params[1], size=self.size)
+        self.error_sim = &#39;lognormal&#39;
+
+    else:
+        raise ValueError(&#34;Unsupported input for &#39;uncertainties&#39;.&#34;)
+
+    self._add_errors()</code></pre>
+</details>
+</dd>
+<dt id="lcsim.ArtificialLightCurve.data"><code class="name flex">
+<span>def <span class="ident">data</span></span>(<span>self, get_all=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get the simulated light curve data.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>get_all</code></strong> :&ensp;<code>bool</code>, default=<code>False</code></dt>
+<dd>As default returns only the final light curve data, i.e. the
+resampled and/or noise-added light curve.
+If True, returns all data including the original sampling.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>out</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Simulated light curve data.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def data(self, get_all=False):
+    &#34;&#34;&#34;Get the simulated light curve data.
+
+    Parameters
+    -----
+    get_all : bool, default=False
+        As default returns only the final light curve data, i.e. the
+        resampled and/or noise-added light curve.
+        If True, returns all data including the original sampling.
+
+    Returns
+    -----
+    out : dict
+        Simulated light curve data.
+    &#34;&#34;&#34;
+
+    # return all light curves (original, resampled, errors added):
+    if get_all:
+        # add original light curve:
+        results = {
+                &#39;time_orig&#39;: self.time_orig,
+                &#39;flux_orig&#39;: self.flux_orig}
+
+        # add resampled light curve (if available):
+        if self.resampled:
+            results[&#39;time_res&#39;] = self.time_res
+            results[&#39;flux_res&#39;] = self.flux_res
+
+        # add error-added light curve (if available):
+        if self.error_sim:
+            results[&#39;flux_err&#39;] = self.flux_err
+            results[&#39;flux_unc&#39;] = self.flux_unc
+
+    # return final light curve (resampled and error-added):
+    elif self.error_sim and self.resampled:
+        results = {
+                &#39;time&#39;: self.time_res,
+                &#39;flux&#39;: self.flux_err,
+                &#39;flux_unc&#39;: self.flux_unc}
+
+    # return final light curve (error-added):
+    elif self.error_sim:
+        results = {
+                &#39;time&#39;: self.time_orig,
+                &#39;flux&#39;: self.flux_err,
+                &#39;flux_unc&#39;: self.flux_unc}
+
+    # return final light curve (resampled):
+    elif self.resampled:
+        results = {
+                &#39;time&#39;: self.time_res,
+                &#39;flux&#39;: self.flux_res}
+
+    # return final light curve (original):
+    else:
+        results = {
+                &#39;time&#39;: self.time_orig,
+                &#39;flux&#39;: self.flux_orig}
+
+    return results</code></pre>
+</details>
+</dd>
+<dt id="lcsim.ArtificialLightCurve.resample"><code class="name flex">
+<span>def <span class="ident">resample</span></span>(<span>self, time_steps, params=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Resample the artificial light curve.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>time_steps</code></strong> :&ensp;<code>float, numpy.ndarray,</code> or <code>str</code></dt>
+<dd>See notes for details.</dd>
+<dt><strong><code>params</code></strong> :&ensp;<code>list</code> or <code>numpy.ndarray</code>, default=<code>None</code></dt>
+<dd>See notes for details.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>None</code></dt>
+<dd>&nbsp;</dd>
+</dl>
+<h2 id="notes">Notes</h2>
+<p>This method provides several options to resample the artificial data to
+an even or uneven time grid:
+1. Provide a float for 'time_steps' to resample to an even time grid.
+2. Provide a numpy.ndarray for 'time steps'. The light curve will be
+resampled to these time stamps. The light curve will be cut off,
+when the provided array exceeds the total time of the simulated
+data. Note that the simulated data starts at time 0.
+3. Set 'time_steps' to 'ecdf' and provide a numpy.ndarray of time
+stamps to 'params'. The method will calculate the ECDF of time steps
+(i.e. time differences) between the provided time data and then
+randomly draw time steps from the ECDF to construct a new series of
+time stamps.
+4. Set 'time_steps' to 'powerlaw' and provide a list of three
+parameters to 'param': (1) the power-law index, (2) the lower, and
+(3) the upper limit of the truncated distribution.
+Time steps will be randomly drawn from this distribution to
+construct a new series of time stamps.
+5. Set 'time_steps' to 'lognormal' and provide a list of two parameters
+to 'param': (1) mu and (2) sigma.
+Time steps will be randomly drawn from this distribution to
+construct a new series of time stamps.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def resample(self, time_steps, params=None):
+    &#34;&#34;&#34;Resample the artificial light curve.
+
+    Parameters
+    -----
+    time_steps : float, numpy.ndarray, or str
+        See notes for details.
+    params : list or numpy.ndarray, default=None
+        See notes for details.
+
+    Returns
+    -----
+    None
+
+    Notes
+    -----
+    This method provides several options to resample the artificial data to
+    an even or uneven time grid:
+    1. Provide a float for &#39;time_steps&#39; to resample to an even time grid.
+    2. Provide a numpy.ndarray for &#39;time steps&#39;. The light curve will be
+       resampled to these time stamps. The light curve will be cut off,
+       when the provided array exceeds the total time of the simulated
+       data. Note that the simulated data starts at time 0.
+    3. Set &#39;time_steps&#39; to &#39;ecdf&#39; and provide a numpy.ndarray of time
+       stamps to &#39;params&#39;. The method will calculate the ECDF of time steps
+       (i.e. time differences) between the provided time data and then
+       randomly draw time steps from the ECDF to construct a new series of
+       time stamps.
+    4. Set &#39;time_steps&#39; to &#39;powerlaw&#39; and provide a list of three
+       parameters to &#39;param&#39;: (1) the power-law index, (2) the lower, and
+       (3) the upper limit of the truncated distribution.
+       Time steps will be randomly drawn from this distribution to
+       construct a new series of time stamps.
+    5. Set &#39;time_steps&#39; to &#39;lognormal&#39; and provide a list of two parameters
+       to &#39;param&#39;: (1) mu and (2) sigma.
+       Time steps will be randomly drawn from this distribution to
+       construct a new series of time stamps.
+    &#34;&#34;&#34;
+
+    # even time sampling:
+    if isinstance(time_steps, float):
+        # time step is shorter than original time sampling:
+        if time_steps &lt;= self.time_orig_sampling:
+            print(&#39;Requested time step is shorter or equal to original &#39;
+                  &#39;sampling. resample() aborted.&#39;)
+            return False
+
+        # time step is a multiple of the original sampling:
+        ratio = time_steps / self.time_orig_sampling
+        if (ratio) % 1. == 0:
+            n = int(ratio)
+            self.time_res = self.time_orig[::n]
+            self.flux_res = self.flux_orig[::n]
+            self.resampled = &#39;const&#39;
+            self.time_res_total = self.time_res[-1] - self.time_res[0]
+            self.time_res_sampling = time_steps
+            self.size = self.time_res.size
+
+            if self.error_sim:
+                self.error_sim = False
+                self.flux_err = None
+                self.flux_unc = None
+                print(&#39;Note: resampling removed the error simulation.&#39;)
+
+            return True
+
+        # time step requires interpolation:
+        self.time_res = np.arange(0, self.time_orig_total, time_steps)
+        self.resampled = &#39;const&#39;
+
+    # resample to specified time steps:
+    if isinstance(time_steps, np.ndarray):
+        # check that time steps are within total time:
+        time_steps -= np.min(time_steps)
+        sel = time_steps &lt; self.time_orig_total
+        self.time_res = time_steps[sel]
+        self.resampled = &#39;specific&#39;
+
+    # draw time steps from ECDF of time steps:
+    elif time_steps == &#39;ecdf&#39;:
+        self.time_res = self._random_timesteps(
+                self.time_orig_total, dist=&#39;ecdf&#39;, params=params)
+        self.resampled = &#39;ecdf&#39;
+
+    # draw time steps from powerlaw or log-normal distribution:
+    elif time_steps in [&#39;powerlaw&#39;, &#39;lognormal&#39;]:
+        self.time_res = self._random_timesteps(
+                self.time_orig_total, dist=time_steps, params=params)
+        self.resampled = time_steps
+
+    else:
+        raise ValueError(&#34;Unsupported input for &#39;time_steps&#39;.&#34;)
+
+    # interpolate data:
+    self.flux_res = np.interp(
+            self.time_res, self.time_orig, self.flux_orig)
+    self.time_res_total = self.time_res[-1] - self.time_res[0]
+    time_diff = np.diff(self.time_res)
+    self.time_res_sampling = np.median(time_diff)
+    self.size = self.time_res.size</code></pre>
+</details>
+</dd>
+<dt id="lcsim.ArtificialLightCurve.rescale"><code class="name flex">
+<span>def <span class="ident">rescale</span></span>(<span>self, mean, std)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Rescale the light curves.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>mean</code></strong> :&ensp;<code>float</code></dt>
+<dd>The simulated light curves will be shifted such that they have this
+mean value.</dd>
+<dt><strong><code>std</code></strong> :&ensp;<code>float</code></dt>
+<dd>The simulated light curves will be scaled such that they have this
+standard deviation.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>None</code></dt>
+<dd>&nbsp;</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>Warning</code></dt>
+<dd>Raise when the simulated light curves are of Emmanoulopoulos-type.</dd>
+</dl>
+<h2 id="notes">Notes</h2>
+<p>The rescaling is applied to the originally sampled and (if applicable)
+to the resampled data. If simulated errors were applied before, those
+do not affect the rescaled data. New errors will be applied after the
+rescaling.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def rescale(self, mean, std):
+    &#34;&#34;&#34;Rescale the light curves.
+
+    Parameters
+    -----
+    mean : float
+        The simulated light curves will be shifted such that they have this
+        mean value.
+    std : float
+        The simulated light curves will be scaled such that they have this
+        standard deviation.
+
+    Returns
+    -----
+    None
+
+    Raises
+    -----
+    Warning
+        Raise when the simulated light curves are of Emmanoulopoulos-type.
+
+    Notes
+    -----
+    The rescaling is applied to the originally sampled and (if applicable)
+    to the resampled data. If simulated errors were applied before, those
+    do not affect the rescaled data. New errors will be applied after the
+    rescaling.
+    &#34;&#34;&#34;
+
+    if self.lc_type == &#39;EMP&#39;:
+        raise Warning(
+                &#34;Rescaling Emmanoulopoulos-type light curves is not &#34; \
+                &#34;recommended.&#34;)
+
+    # rescale original and resampled data:
+    if self.resampled:
+        mean_cur = np.mean(self.flux_res)
+        std_cur = np.std(self.flux_res)
+        scale_factor = std / std_cur
+        self.flux_res = (self.flux_res - mean_cur) * scale_factor + mean
+        self.flux_orig = (self.flux_orig - mean_cur) * scale_factor + mean
+
+    # rescale original data:
+    else:
+        mean_cur = np.mean(self.flux_orig)
+        std_cur = np.std(self.flux_orig)
+        scale_factor = std / std_cur
+        self.flux_orig = (self.flux_orig - mean_cur) * scale_factor + mean
+
+    # apply new error simulation:
+    if self.error_sim:
+        self._add_errors()</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="lcsim.LightCurveSimulator"><code class="flex name class">
+<span>class <span class="ident">LightCurveSimulator</span></span>
+<span>(</span><span>time_total, time_sampling)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Simulate blazar light curves as a random noise process.</p>
+<p>Create an instance of LightCurveSimulator.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>time_total</code></strong> :&ensp;<code>float</code></dt>
+<dd>Set the total time for the simulated data.</dd>
+<dt><strong><code>time_sampling</code></strong> :&ensp;<code>float</code></dt>
+<dd>Set the time sampling for the simulated data.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>out</code></strong> :&ensp;<code>LightCurveSimulator-instance</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class LightCurveSimulator:
+    &#34;&#34;&#34;Simulate blazar light curves as a random noise process.&#34;&#34;&#34;
+
+    #--------------------------------------------------------------------------
+    def __init__(self, time_total, time_sampling):
+        &#34;&#34;&#34;Create an instance of LightCurveSimulator.
+
+        Parameters
+        -----
+        time_total : float
+            Set the total time for the simulated data.
+        time_sampling : float
+            Set the time sampling for the simulated data.
+
+        Returns
+        -----
+        out : LightCurveSimulator-instance
+        &#34;&#34;&#34;
+
+        self.time_total = time_total
+        self.time_sampling = time_sampling
+
+        # number of data points of the simulated data:
+        self.ndp = int(ceil(time_total / time_sampling)) + 1
+
+        # create data time steps:
+        self._create_timesteps()
+
+    #--------------------------------------------------------------------------
+    def set_time_sampling(self, time_total, time_sampling):
+        &#34;&#34;&#34;Create an instance of LightCurveSimulator.
+
+        Parameters
+        -----
+        time_total : float
+            Set the total time for the simulated data.
+        time_sampling : float
+            Set the time sampling for the simulated data.
+
+        Returns
+        -----
+        None
+        &#34;&#34;&#34;
+
+        self.time_total = time_total
+        self.time_sampling = time_sampling
+
+        # number of data points of the simulated data:
+        self.ndp = int(ceil(time_total / time_sampling)) + 1
+
+        # create data time steps:
+        self._create_timesteps()
+
+    #--------------------------------------------------------------------------
+    @staticmethod
+    def suggest_time_sampling(time, average=&#39;median&#39;, factor=10.):
+        &#34;&#34;&#34;Suggests a total time and time sampling for simulated data, based on
+        input time data. The total time is increased by a given factor, the
+        time sampling reduced by the same factor, to include low and high
+        frequency power in the simulated noise process.
+
+        Parameters
+        -----
+        time : 1darray
+            Time series.
+        average : string, default=&#39;median&#39;
+            Choose average type (&#39;median&#39; or &#39;mean&#39;) for suggested sampling.
+        factor : float, default=10.
+            The suggested total time and sampling are modified by this factor.
+
+        Returns
+        -----
+        out, out : float, float
+            Suggested (minimum) total time and (maximum) sampling rate.
+        &#34;&#34;&#34;
+
+        total_time = time[-1] - time[0]
+        deltat = np.diff(time)
+        sampling_median = np.median(deltat)
+        sampling_mean = np.mean(deltat)
+        sampling_min = np.min(deltat)
+        sampling_max = np.max(deltat)
+
+        if average==&#39;median&#39;:
+            sim_sampling = sampling_median / factor
+        elif average==&#39;mean&#39;:
+            sim_sampling = sampling_mean / factor
+        sim_total = total_time * factor
+
+        print(&#39;Total time:         {0:8.3f}&#39;.format(total_time))
+        print(&#39;Min. sampling:      {0:8.3f}&#39;.format(sampling_min))
+        print(&#39;Max. sampling:      {0:8.3f}&#39;.format(sampling_max))
+        print(&#39;Mean sampling:      {0:8.3f}&#39;.format(sampling_mean))
+        print(&#39;Median sampling:    {0:8.3f}&#39;.format(sampling_median))
+        print(&#39;Suggested&#39;)
+        print(&#39;Maximum sampling:   {0:8.3f}&#39;.format(sim_sampling))
+        print(&#39;Minimum total time: {0:8.3f}&#39;.format(sim_total))
+
+        return sim_total, sim_sampling
+
+    #--------------------------------------------------------------------------
+    def _create_timesteps(self):
+        &#34;&#34;&#34;Creates time steps based on total time and time sampling.
+        &#34;&#34;&#34;
+
+        # adjust total time:
+        time_total = self.time_sampling * (self.ndp - 1)
+
+        self.time = np.linspace(0, time_total, self.ndp)
+
+    #--------------------------------------------------------------------------
+    def powerlaw(self, frequencies, index=1., amplitude=10., frequency=0.1):
+        &#34;&#34;&#34;Returns an array of amplitudes following a power-law over the input
+        frequencies.
+
+        Parameters
+        -----
+        frequencies : 1darray
+            Frequencies for which to calculate the power-law in arbitrary
+            units.
+        index : float, default=1.
+            Power-law index.
+        amplitude : float, default=10.
+            Power-law amplitude at &#39;frequency&#39; in arbitrary unit.
+        frequency : float, default=0.1
+            Frequency for the given &#39;amplitude&#39; in same unit as &#39;frequencies&#39;.
+
+        Returns
+        -----
+        out : 1darray
+            Array of same length as input &#39;frequencies&#39;.
+
+        Notes
+        -----
+        Can be used as a generic shape for the power spectrum of a simulated
+        light curve.
+        &#34;&#34;&#34;
+
+        return amplitude * np.power(frequencies / frequency, -index)
+
+    #--------------------------------------------------------------------------
+    def kneemodel(self, frequencies, index=1., amplitude=10., frequency=0.1):
+        &#34;&#34;&#34;Returns an array of amplitudes following a constant profile that
+        changes into a power-law around a given frequency.
+
+        Parameters
+        -----
+        frequencies : 1darray
+            Frequencies for which to calculate the power-law in arbitrary
+            units.
+        index : float, default=1.
+            Power-law index.
+        amplitude : float, default=10.
+            Constant amplitude at frequencies below &#39;frequency&#39; in arbitrary
+            unit.
+        frequency : float, default=0.1
+            Frequency  in same unit as &#39;frequencies&#39; at which profile changes
+            into a power-law.
+
+        Returns
+        -----
+        out : 1darray
+            Array of same length as input &#39;frequencies&#39;.
+
+        Notes
+        -----
+        Can be used as a generic shape for the power spectrum of a simulated
+        light curve.
+        &#34;&#34;&#34;
+
+        return amplitude * np.power(1 + np.power(frequencies / frequency, 2),
+                                    -index / 2.)
+
+    #--------------------------------------------------------------------------
+    def brokenpowerlaw(
+            self, frequencies, index_lo=1., index_hi=2., amplitude=10.,
+            frequency=0.1):
+        &#34;&#34;&#34;Returns an array of amplitudes following a broken power-law.
+
+        Parameters
+        -----
+        frequencies : array
+            Frequencies for which to calculate the power-law in arbitrary units.
+        index_hi : float, default=2.
+            Power-law index at frequencies lower than &#39;frequency&#39;.
+        index_lo : float, default=1.
+            Power-law index at frequencies higher than &#39;frequency&#39;.
+        frequency : float, default=0.1
+            Frequency of the power-law break in same unit as &#39;frequencies&#39;.
+        amplitude : float, default=10.
+            Amplitude at &#39;frequency&#39; in arbitrary unit.
+
+        Returns
+        -----
+            Array of same length as input &#39;frequencies&#39;.
+
+        Notes
+        -----
+        Can be used as a generic shape for the power spectrum of a simulated
+        light curve.
+        &#34;&#34;&#34;
+
+        return np.where(
+                frequencies &gt; frequency,
+                amplitude * np.power(frequencies / frequency, -index_hi),
+                amplitude * np.power(frequencies / frequency, -index_lo))
+
+    #--------------------------------------------------------------------------
+    def multi_logn(self, x, *params):
+        &#34;&#34;&#34;Multi-component log-normal function.
+
+        Returns the function values at position x.
+
+        Parameters
+        ------
+        x : float or np.ndarray
+            Function is evaluated at these positions.
+        params : list
+            Function parameters. For each log-normal component three
+            parameters: peak position, peak amplitude, peak width. For multiple
+            components append tripplets of these parameters (e.g.
+            [pos1, amp1, wid1, pos2, amp2, wid2]).
+
+        Returns
+        -----
+        out : float or np.ndarray
+            Function evaluated at x.
+
+        Notes
+        -----
+        Can be used as a generic shape for the probability density of a
+        simulated light curve.
+        &#34;&#34;&#34;
+
+        y = np.zeros_like(x)
+        for i in range(0, len(params), 3):
+            pos = params[i]
+            amp = params[i+1]
+            wid = params[i+2]
+            y = y + amp * np.exp( -((np.log(x) - np.log(pos)) / wid)**2)
+
+        return y
+
+    #--------------------------------------------------------------------------
+    def _draw_from_func(self, func, params, x_min, x_max, size=1, seed=False):
+        &#34;&#34;&#34;Draws random number from a function.
+
+        Parameters
+        -----
+        func : function
+            A function to draw random mumbers from.
+        params : list
+            The parameters of the PDF.
+        x_min : float
+            The minimum value to draw.
+        x_min : float
+            The maximum value to draw.
+        size : int, default=1
+            Number of random data points to return.
+        seed : int, default=False
+            Sets a seed for the random generator to get a reproducable result.
+            For testing only.
+
+        Returns
+        -----
+        out : np.1darray
+            Random numbers.
+
+        Notes
+        -----
+        Can be used to draw random numbers from a probability density function.
+        &#34;&#34;&#34;
+
+        x = np.linspace(x_min, x_max, 1000)
+        pdf = func(x, *params)
+        cdf = np.cumsum(pdf)
+        cdf /= cdf[-1]
+        if seed:
+            np.random.seed(seed)
+        rand = np.random.uniform(0, 1, size)
+        rand = np.interp(rand, cdf, x)
+
+        return rand
+
+    #--------------------------------------------------------------------------
+    def _sim_tk(
+            self, time_total, time_sampling, spec_shape, spec_args,
+            seed=False):
+        &#34;&#34;&#34;Helper function that is called by self.sim_tk().
+
+        This function implements the Timmer &amp; Koenig, 1995 [1] algorithm for
+        producing a single artificial light curve. See docstring of
+        self.sim_tk() for details.
+
+        Parameters
+        -----
+        time_total : float
+            Length of the simulation in arbitrary time unit.
+        time_sampling : float
+            Length of the sampling interval in same unit as &#39;time&#39;.
+        spec_shape : func
+            Function that takes an array of frequencies and &#39;spec_args&#39; as
+            input and calculates a spectrum for those frequencies.
+        spec_args : list
+            Function arguments to &#39;spec_shape&#39;.
+        seed : int, default=False
+            Sets a seed for the random generator to get a reproducable result.
+            For testing only.
+
+        Returns
+        -----
+        out : numpy.ndarray
+            Simulated light curve following a random noise process with the
+            input power spectrum.
+
+        References
+        -----
+        [1] Timmer and Koenig, 1995, &#39;On generating power law noise&#39;, A&amp;A, 300,
+            707
+        &#34;&#34;&#34;
+
+        # get number of data points:
+        ndp = int(ceil(time_total / time_sampling)) + 1
+
+        # set spectrum:
+        freq = np.fft.rfftfreq(ndp, time_sampling)
+        freq[0] = 1
+        if not callable(spec_shape):
+            spec_shape = eval(&#39;self.{0:s}&#39;.format(spec_shape))
+        spectrum = spec_shape(freq[1:], *spec_args)
+        spectrum[0] = 0
+        del freq
+
+        # random (complex) Fourier coefficients for inverse Fourier transform:
+        if seed:
+            np.random.seed(seed)
+        coef = np.random.normal(size=(2, spectrum.shape[0]))
+
+        # if N is even the Nyquist frequency is real:
+        if ndp%2 == 0:
+            coef[-1,1] = 0.
+
+        # complex coefficients:
+        coef = coef[0] + 1j * coef[1]
+
+        # scale coefficients with spectrum:
+        #coef *= np.sqrt(0.5 * spectrum) # this is how it is defined in T&amp;K95
+        #coef *= np.sqrt(0.5 * spectrum * ndp / sampling) # this is what I
+        # used in PhD thesis
+        coef *= np.sqrt(0.5 * spectrum * ndp) # this is what works to get
+        # correct PSD slope, see argument in PhD notebook
+        # 1.2_AmplitudeProblem.ipynb
+        coef *= 10**(spec_args[0] * 2.5) # this is an empirical scaling factor
+        # to get the correct amplitude (approximately; would be better to
+        # understand where this is coming from)
+
+        # inverse Fourier transform:
+        lightcurve = np.fft.irfft(coef, ndp)
+
+        # normalize to zero mean:
+        lightcurve -= np.mean(lightcurve)
+
+        return lightcurve
+
+    #--------------------------------------------------------------------------
+    def sim_tk(self, spec_shape, spec_args, nlcs=1, seed=False):
+        &#34;&#34;&#34;Simulates one/multiple equally sampled light curve(s) following a
+        random noise process with given a spectral shape of the power spectral
+        density [1].
+
+        Parameters
+        -----
+        spec_shape : func
+            Function that takes an array of frequencies and &#39;spec_args&#39; as
+            input and calculates a spectrum for those frequencies.
+        spec_args : list
+            Function arguments to &#39;spec_shape&#39;.
+        nlcs : int, default=1
+            Set the number of light curves that are produced. See notes below.
+        seed : int, default=False
+            Sets a seed for the random generator to get a reproducable result.
+            For testing only.
+
+        Returns
+        -----
+        None
+
+        Notes
+        -----
+        The method will initially produce one long light curve with a total
+        time N times longer than the final total time, where N is set by
+        &#39;nlcs&#39;. This long light curve is then split into N individual pieces.
+        Producing one initial long light curves means that power at frequencies
+        N times lower than the final total time is included in the noise
+        process. Setting ncls&gt;1 allows to include low-frequency power.
+
+        References
+        -----
+        [1] Timmer and Koenig, 1995, &#39;On generating power law noise&#39;, A&amp;A, 300,
+            707
+        &#34;&#34;&#34;
+
+        # get total time of long light curve:
+        time_total = self.time_sampling * self.ndp * nlcs
+
+        # simulate long lightcurve:
+        lightcurve = self._sim_tk(
+                time_total, self.time_sampling, spec_shape, spec_args,
+                seed=seed)
+        lightcurve = lightcurve[:-1]
+
+        # one light curve: store final data:
+        if nlcs == 1:
+            self.lightcurves = [lightcurve]
+
+        # multiple light curves: reshape to short light curves:
+        else:
+            shape = (nlcs, self.ndp)
+            lightcurves = lightcurve[:self.ndp*nlcs].reshape(shape)
+            self.lightcurves = []
+            for lc in lightcurves:
+                # normalize to zero mean:
+                lc /= np.mean(lc)
+                self.lightcurves.append(lc)
+
+        self.lc_type = &#39;TK&#39;
+        self.lc_scale = &#39;None&#39;
+
+    #--------------------------------------------------------------------------
+    def rescale(self, mean, std):
+        &#34;&#34;&#34;Rescale the light curves.
+
+        Parameters
+        -----
+        mean : float
+            The simulated light curves will be shifted such that they have this
+            mean value.
+        std : float
+            The simulated light curves will be scaled such that they have this
+            standard deviation.
+
+        Returns
+        -----
+        None
+
+        Raises
+        -----
+        Warning
+            Raise when the simulated light curves are of Emmanoulopoulos-type.
+        &#34;&#34;&#34;
+
+        if self.lc_type == &#39;EMP&#39;:
+            raise Warning(
+                    &#34;Rescaling Emmanoulopoulos-type light curves is not &#34; \
+                    &#34;recommended.&#34;)
+
+        for i, lightcurve in enumerate(self.lightcurves):
+            mean_cur = lightcurve.mean()
+            std_cur = lightcurve.std()
+            scale_factor = std / std_cur
+            self.lightcurves[i] = (lightcurve - mean_cur) * scale_factor + mean
+
+    #--------------------------------------------------------------------------
+    def _adjust_pdf(
+            self, lightcurve, pdf, pdf_params=None, pdf_range=None,
+            iterations=100, keep_non_converged=False, threshold=0.01):
+        &#34;&#34;&#34;Helper function that is called by self.adjust_pdf().
+
+        This function implements the Emmanoulopoulos et al, 2013 [1] algorithm
+        for changing the PDF of a light curve while maintaining its PSD. See
+        docstring of self.adjust_pdf() for details.
+
+        Parameters
+        -----
+        lightcurve : numpy.ndarray
+            Flux density data of an evenly sampled light curve.
+        pdf : numpy.ndarray or callable
+            When providing flux data in a numpy.array the method will calculate
+            an ECDF of the input data and draw random flux values from that
+            ECDF.
+            When providing a callable function the method will use that
+            function to draw random flux values. Parameters for the function
+            need to be provided in &#39;pdf_params&#39;
+        pdf_params : list, default=None
+            When a callable function is given to &#39;pdf&#39;, corresponding
+            parameters need to be given to &#39;pdf_params&#39;.
+        pdf_range : list
+            List of two elements. Random flux values will be drawn from the
+            given PDF between the two limits provided by &#39;pdf_range&#39;. Required
+            only when a callable function is given to &#39;pdf&#39;. Does not have an
+            effect, when a numpy.ndarray is given to &#39;pdf&#39;.
+        iterations : int, default=100
+            The algorithm [1] is iterative. This value sets a maximum number of
+            iterations to avoid infinite loops.
+        keep_non_converged : bool or str, default=False
+            If True the result is returned even if the algorithm [1] did not
+            converge.
+            If False and the algorithm [1] did not converge, False is returned.
+            If set to &#39;ask&#39;, a notification is written asking how to proceed.
+        threshold : float, default=0.01
+            Defines when the algorithm [1] is considered as converged.
+            Iterations are stopped when maximum difference between the current
+            and the previous light curve does not exceed this &#39;threshold&#39;.
+
+        Returns
+        -----
+        out : numpy.ndarray
+            Simulated light curve with the target PDF.
+
+        References
+        -----
+        [1] Emmanoulopoulos et al, 2013, MNRAS, 433, 907
+        &#34;&#34;&#34;
+
+        # discrete Fourier transform:
+        dft_norm = np.fft.rfft(lightcurve)
+        ampl_adj = np.absolute(dft_norm)
+
+        # create artificial light curve based on ECDF of input data:
+        if isinstance(pdf, np.ndarray):
+            ecdf = ECDF(pdf)
+            lc_sim = np.interp(np.random.uniform(ecdf.y[1], 1., size=self.ndp),
+                               ecdf.y, ecdf.x)
+
+        # or create artificial light curve based on model PDF:
+        elif callable(pdf):
+            lc_sim = self._draw_from_func(
+                    pdf, pdf_params, pdf_range[0], pdf_range[1], size=self.ndp)
+
+        else:
+            raise ValueError(
+                    &#34;&#39;pdf&#39; needs to be a np.ndarray or a function.&#34;)
+
+        # iteration:
+        for i in range(iterations):
+            # calculate DFT, amplitudes:
+            dft_sim = np.fft.rfft(lc_sim)
+            ampl_sim = np.absolute(dft_sim)
+
+            # spectral adjustment:
+            dft_adj = dft_sim / ampl_sim * ampl_adj
+            lc_adj = np.fft.irfft(dft_adj, n=self.ndp)
+
+            # amplitude adjustment:
+            a = np.argsort(lc_adj)
+            s = np.argsort(lc_sim)
+            lc_adj[a] = lc_sim[s]
+
+            # check if process converged:
+            if np.max(np.absolute(lc_adj -lc_sim) / lc_sim) &lt; threshold:
+                break
+            else:
+                lc_sim = deepcopy(lc_adj)
+
+        # no convergence reached:
+        else:
+            # ask what to do:
+            if keep_non_converged == &#39;ask&#39;:
+                inp = raw_input(
+                        &#39;No convergence reached within {0:d} iterations. &#39; \
+                        &#39;Keep (y), throw away (n), or try again (r)?&#39;.format(
+                                iterations))
+                if inp == &#39;y&#39;:
+                    pass
+                elif inp == &#39;r&#39;:
+                    lc_sim = self._adjust_pdf(
+                            lightcurve, pdf, pdf_params=pdf_params,
+                            pdf_range=pdf_range, iterations=iterations,
+                            keep_non_converged=keep_non_converged,
+                            threshold=threshold)
+                else:
+                    lc_sim = False
+
+            # keep result anyway:
+            elif keep_non_converged:
+                pass
+
+            # return False:
+            else:
+                lc_sim = False
+
+        return lc_sim
+
+    #--------------------------------------------------------------------------
+    def adjust_pdf(
+            self, pdf, pdf_params=None, pdf_range=None, iterations=100,
+            keep_non_converged=False, threshold=0.01):
+        &#34;&#34;&#34;Change the PDF of all simulated light curves to a target PDF.
+
+        This method implements the Emmanoulopoulos et al, 2013 [1] algorithm
+        for changing the PDF of a light curve while maintaining its PSD. This
+        routine is automatically applied to all simulated light curves stored
+        in the an LightCurveSimulator-instance.
+
+        Parameters
+        -----
+        pdf : numpy.ndarray or callable
+            When providing flux data in a numpy.array the method will calculate
+            an ECDF of the input data and draw random flux values from that
+            ECDF.
+            When providing a callable function the method will use that
+            function to draw random flux values. Parameters for the function
+            need to be provided in &#39;pdf_params&#39;
+        pdf_params : list, default=None
+            When a callable function is given to &#39;pdf&#39;, corresponding
+            parameters need to be given to &#39;pdf_params&#39;.
+        pdf_range : list
+            List of two elements. Random flux values will be drawn from the
+            given PDF between the two limits provided by &#39;pdf_range&#39;. Required
+            only when a callable function is given to &#39;pdf&#39;. Does not have an
+            effect, when a numpy.ndarray is given to &#39;pdf&#39;.
+        iterations : int, default=100
+            The algorithm [1] is iterative. This value sets a maximum number of
+            iterations to avoid infinite loops.
+        keep_non_converged : bool or str, default=False
+            If True the result is returned even if the algorithm [1] did not
+            converge.
+            If False and the algorithm [1] did not converge, False is returned.
+            If set to &#39;ask&#39;, a notification is written asking how to proceed.
+        threshold : float, default=0.01
+            Defines when the algorithm [1] is considered as converged.
+            Iterations are stopped when maximum difference between the current
+            and the previous light curve does not exceed this &#39;threshold&#39;.
+
+        Returns
+        -----
+        None
+
+        References
+        -----
+        [1] Emmanoulopoulos et al, 2013, MNRAS, 433, 907
+        &#34;&#34;&#34;
+
+        # check that the PDFs have not been adjusted yet:
+        if self.lc_type == &#39;EMP&#39;:
+            print(&#39;Light curve PDFs have already been adjusted. &#39; \
+                  &#39;adjust_pdf() aborted!&#39;)
+            return None
+
+        # iterate through light curves:
+        for i, lc in enumerate(self.lightcurves):
+            lc_adj = self._adjust_pdf(
+                    lc, pdf, pdf_params=pdf_params, pdf_range=pdf_range,
+                    iterations=iterations,
+                    keep_non_converged=keep_non_converged, threshold=threshold)
+            self.lightcurves[i] = lc_adj
+
+        # remove non-converged light curves:
+        self.lightcurves = [lc for lc in self.lightcurves if lc is not False]
+
+        self.lc_type = &#39;EMP&#39;
+        if isinstance(pdf, ECDF):
+            self.lc_scale = &#39;ECDF&#39;
+        elif callable(pdf):
+            self.lc_scale = &#39;PDF&#39;
+        else:
+            self.lc_scale = False
+
+    #--------------------------------------------------------------------------
+    def sim_emp(
+            self, spec_shape, spec_args, pdf, pdf_params=None, pdf_range=None,
+            nlcs=1,  iterations=100, keep_non_converged=False, threshold=0.01):
+        &#34;&#34;&#34;Create a simulated light curve with a specified PSD and PDF.
+
+        This method combines the two steps of producting a Gaussian light curve
+        with a given PSD [1] and adjusting its PDF to a specified PDF [2].
+
+        Parameters
+        -----
+        spec_shape : func
+            Function that takes an array of frequencies and &#39;spec_args&#39; as
+            input and calculates a spectrum for those frequencies.
+        spec_args : list
+            Function arguments to &#39;spec_shape&#39;.
+        pdf : numpy.ndarray or callable
+            When providing flux data in a numpy.array the method will calculate
+            an ECDF of the input data and draw random flux values from that
+            ECDF.
+            When providing a callable function the method will use that
+            function to draw random flux values. Parameters for the function
+            need to be provided in &#39;pdf_params&#39;
+        pdf_params : list, default=None
+            When a callable function is given to &#39;pdf&#39;, corresponding
+            parameters need to be given to &#39;pdf_params&#39;.
+        pdf_range : list
+            List of two elements. Random flux values will be drawn from the
+            given PDF between the two limits provided by &#39;pdf_range&#39;. Required
+            only when a callable function is given to &#39;pdf&#39;. Does not have an
+            effect, when a numpy.ndarray is given to &#39;pdf&#39;.
+        nlcs : int, default=1
+            Set the number of light curves that are produced. See notes below.
+        iterations : int, default=100
+            The algorithm [1] is iterative. This value sets a maximum number of
+            iterations to avoid infinite loops.
+        keep_non_converged : bool or str, default=False
+            If True the result is returned even if the algorithm [1] did not
+            converge.
+            If False and the algorithm [1] did not converge, False is returned.
+            If set to &#39;ask&#39;, a notification is written asking how to proceed.
+        threshold : float, default=0.01
+            Defines when the algorithm [1] is considered as converged.
+            Iterations are stopped when maximum difference between the current
+            and the previous light curve does not exceed this &#39;threshold&#39;.
+
+        Returns
+        -----
+        None
+
+        Notes
+        -----
+        The method will initially produce one long Gaussian light curve with a
+        total time N times longer than the final total time, where N is set by
+        &#39;nlcs&#39;. This long light curve is then split into N individual pieces.
+        Producing one initial long light curves means that power at frequencies
+        N times lower than the final total time is included in the noise
+        process. Setting ncls&gt;1 allows to include low-frequency power.
+        The adjustment of the PDF is then applied to every split light curve
+        individually.
+
+        References
+        -----
+        [1] Timmer and Koenig, 1995, &#39;On generating power law noise&#39;, A&amp;A, 300,
+            707
+        [2] Emmanoulopoulos et al, 2013, MNRAS, 433, 907
+        &#34;&#34;&#34;
+
+        self.sim_tk(spec_shape, spec_args, nlcs=nlcs)
+        self.adjust_pdf(
+                pdf, pdf_params=pdf_params, pdf_range=pdf_range,
+                iterations=iterations, keep_non_converged=keep_non_converged,
+                threshold=threshold)
+
+    #--------------------------------------------------------------------------
+    def get_lcs(self):
+        &#34;&#34;&#34;Returns the simulated light curves.
+
+        Parameters
+        -----
+        None
+
+        Returns
+        -----
+        out : list
+            List of simulated light curves, each an ArtificialLightCurve
+            instance.
+        &#34;&#34;&#34;
+
+        lcs = [ArtificialLightCurve(self.time, flux, self.lc_type) \
+               for flux in self.lightcurves]
+
+        return lcs</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="lcsim.LightCurveSimulator.suggest_time_sampling"><code class="name flex">
+<span>def <span class="ident">suggest_time_sampling</span></span>(<span>time, average='median', factor=10.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Suggests a total time and time sampling for simulated data, based on
+input time data. The total time is increased by a given factor, the
+time sampling reduced by the same factor, to include low and high
+frequency power in the simulated noise process.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>time</code></strong> :&ensp;<code>1darray</code></dt>
+<dd>Time series.</dd>
+<dt><strong><code>average</code></strong> :&ensp;<code>string</code>, default=<code>'median'</code></dt>
+<dd>Choose average type ('median' or 'mean') for suggested sampling.</dd>
+</dl>
+<p>factor : float, default=10.
+The suggested total time and sampling are modified by this factor.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>out</code></strong>, <strong><code>out</code></strong> :&ensp;<code>float, float</code></dt>
+<dd>Suggested (minimum) total time and (maximum) sampling rate.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def suggest_time_sampling(time, average=&#39;median&#39;, factor=10.):
+    &#34;&#34;&#34;Suggests a total time and time sampling for simulated data, based on
+    input time data. The total time is increased by a given factor, the
+    time sampling reduced by the same factor, to include low and high
+    frequency power in the simulated noise process.
+
+    Parameters
+    -----
+    time : 1darray
+        Time series.
+    average : string, default=&#39;median&#39;
+        Choose average type (&#39;median&#39; or &#39;mean&#39;) for suggested sampling.
+    factor : float, default=10.
+        The suggested total time and sampling are modified by this factor.
+
+    Returns
+    -----
+    out, out : float, float
+        Suggested (minimum) total time and (maximum) sampling rate.
+    &#34;&#34;&#34;
+
+    total_time = time[-1] - time[0]
+    deltat = np.diff(time)
+    sampling_median = np.median(deltat)
+    sampling_mean = np.mean(deltat)
+    sampling_min = np.min(deltat)
+    sampling_max = np.max(deltat)
+
+    if average==&#39;median&#39;:
+        sim_sampling = sampling_median / factor
+    elif average==&#39;mean&#39;:
+        sim_sampling = sampling_mean / factor
+    sim_total = total_time * factor
+
+    print(&#39;Total time:         {0:8.3f}&#39;.format(total_time))
+    print(&#39;Min. sampling:      {0:8.3f}&#39;.format(sampling_min))
+    print(&#39;Max. sampling:      {0:8.3f}&#39;.format(sampling_max))
+    print(&#39;Mean sampling:      {0:8.3f}&#39;.format(sampling_mean))
+    print(&#39;Median sampling:    {0:8.3f}&#39;.format(sampling_median))
+    print(&#39;Suggested&#39;)
+    print(&#39;Maximum sampling:   {0:8.3f}&#39;.format(sim_sampling))
+    print(&#39;Minimum total time: {0:8.3f}&#39;.format(sim_total))
+
+    return sim_total, sim_sampling</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="lcsim.LightCurveSimulator.adjust_pdf"><code class="name flex">
+<span>def <span class="ident">adjust_pdf</span></span>(<span>self, pdf, pdf_params=None, pdf_range=None, iterations=100, keep_non_converged=False, threshold=0.01)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Change the PDF of all simulated light curves to a target PDF.</p>
+<p>This method implements the Emmanoulopoulos et al, 2013 [1] algorithm
+for changing the PDF of a light curve while maintaining its PSD. This
+routine is automatically applied to all simulated light curves stored
+in the an LightCurveSimulator-instance.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>pdf</code></strong> :&ensp;<code>numpy.ndarray</code> or <code>callable</code></dt>
+<dd>When providing flux data in a numpy.array the method will calculate
+an ECDF of the input data and draw random flux values from that
+ECDF.
+When providing a callable function the method will use that
+function to draw random flux values. Parameters for the function
+need to be provided in 'pdf_params'</dd>
+<dt><strong><code>pdf_params</code></strong> :&ensp;<code>list</code>, default=<code>None</code></dt>
+<dd>When a callable function is given to 'pdf', corresponding
+parameters need to be given to 'pdf_params'.</dd>
+<dt><strong><code>pdf_range</code></strong> :&ensp;<code>list</code></dt>
+<dd>List of two elements. Random flux values will be drawn from the
+given PDF between the two limits provided by 'pdf_range'. Required
+only when a callable function is given to 'pdf'. Does not have an
+effect, when a numpy.ndarray is given to 'pdf'.</dd>
+<dt><strong><code>iterations</code></strong> :&ensp;<code>int</code>, default=<code>100</code></dt>
+<dd>The algorithm [1] is iterative. This value sets a maximum number of
+iterations to avoid infinite loops.</dd>
+<dt><strong><code>keep_non_converged</code></strong> :&ensp;<code>bool</code> or <code>str</code>, default=<code>False</code></dt>
+<dd>If True the result is returned even if the algorithm [1] did not
+converge.
+If False and the algorithm [1] did not converge, False is returned.
+If set to 'ask', a notification is written asking how to proceed.</dd>
+<dt><strong><code>threshold</code></strong> :&ensp;<code>float</code>, default=<code>0.01</code></dt>
+<dd>Defines when the algorithm [1] is considered as converged.
+Iterations are stopped when maximum difference between the current
+and the previous light curve does not exceed this 'threshold'.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>None</code></dt>
+<dd>&nbsp;</dd>
+</dl>
+<h2 id="references">References</h2>
+<p>[1] Emmanoulopoulos et al, 2013, MNRAS, 433, 907</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def adjust_pdf(
+        self, pdf, pdf_params=None, pdf_range=None, iterations=100,
+        keep_non_converged=False, threshold=0.01):
+    &#34;&#34;&#34;Change the PDF of all simulated light curves to a target PDF.
+
+    This method implements the Emmanoulopoulos et al, 2013 [1] algorithm
+    for changing the PDF of a light curve while maintaining its PSD. This
+    routine is automatically applied to all simulated light curves stored
+    in the an LightCurveSimulator-instance.
+
+    Parameters
+    -----
+    pdf : numpy.ndarray or callable
+        When providing flux data in a numpy.array the method will calculate
+        an ECDF of the input data and draw random flux values from that
+        ECDF.
+        When providing a callable function the method will use that
+        function to draw random flux values. Parameters for the function
+        need to be provided in &#39;pdf_params&#39;
+    pdf_params : list, default=None
+        When a callable function is given to &#39;pdf&#39;, corresponding
+        parameters need to be given to &#39;pdf_params&#39;.
+    pdf_range : list
+        List of two elements. Random flux values will be drawn from the
+        given PDF between the two limits provided by &#39;pdf_range&#39;. Required
+        only when a callable function is given to &#39;pdf&#39;. Does not have an
+        effect, when a numpy.ndarray is given to &#39;pdf&#39;.
+    iterations : int, default=100
+        The algorithm [1] is iterative. This value sets a maximum number of
+        iterations to avoid infinite loops.
+    keep_non_converged : bool or str, default=False
+        If True the result is returned even if the algorithm [1] did not
+        converge.
+        If False and the algorithm [1] did not converge, False is returned.
+        If set to &#39;ask&#39;, a notification is written asking how to proceed.
+    threshold : float, default=0.01
+        Defines when the algorithm [1] is considered as converged.
+        Iterations are stopped when maximum difference between the current
+        and the previous light curve does not exceed this &#39;threshold&#39;.
+
+    Returns
+    -----
+    None
+
+    References
+    -----
+    [1] Emmanoulopoulos et al, 2013, MNRAS, 433, 907
+    &#34;&#34;&#34;
+
+    # check that the PDFs have not been adjusted yet:
+    if self.lc_type == &#39;EMP&#39;:
+        print(&#39;Light curve PDFs have already been adjusted. &#39; \
+              &#39;adjust_pdf() aborted!&#39;)
+        return None
+
+    # iterate through light curves:
+    for i, lc in enumerate(self.lightcurves):
+        lc_adj = self._adjust_pdf(
+                lc, pdf, pdf_params=pdf_params, pdf_range=pdf_range,
+                iterations=iterations,
+                keep_non_converged=keep_non_converged, threshold=threshold)
+        self.lightcurves[i] = lc_adj
+
+    # remove non-converged light curves:
+    self.lightcurves = [lc for lc in self.lightcurves if lc is not False]
+
+    self.lc_type = &#39;EMP&#39;
+    if isinstance(pdf, ECDF):
+        self.lc_scale = &#39;ECDF&#39;
+    elif callable(pdf):
+        self.lc_scale = &#39;PDF&#39;
+    else:
+        self.lc_scale = False</code></pre>
+</details>
+</dd>
+<dt id="lcsim.LightCurveSimulator.brokenpowerlaw"><code class="name flex">
+<span>def <span class="ident">brokenpowerlaw</span></span>(<span>self, frequencies, index_lo=1.0, index_hi=2.0, amplitude=10.0, frequency=0.1)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns an array of amplitudes following a broken power-law.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>frequencies</code></strong> :&ensp;<code>array</code></dt>
+<dd>Frequencies for which to calculate the power-law in arbitrary units.</dd>
+<dt>index_hi : float, default=2.</dt>
+<dt>Power-law index at frequencies lower than 'frequency'.</dt>
+<dt>index_lo : float, default=1.</dt>
+<dt>Power-law index at frequencies higher than 'frequency'.</dt>
+<dt><strong><code>frequency</code></strong> :&ensp;<code>float</code>, default=<code>0.1</code></dt>
+<dd>Frequency of the power-law break in same unit as 'frequencies'.</dd>
+</dl>
+<p>amplitude : float, default=10.
+Amplitude at 'frequency' in arbitrary unit.</p>
+<h2 id="returns">Returns</h2>
+<pre><code>Array of same length as input 'frequencies'.
+</code></pre>
+<h2 id="notes">Notes</h2>
+<p>Can be used as a generic shape for the power spectrum of a simulated
+light curve.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def brokenpowerlaw(
+        self, frequencies, index_lo=1., index_hi=2., amplitude=10.,
+        frequency=0.1):
+    &#34;&#34;&#34;Returns an array of amplitudes following a broken power-law.
+
+    Parameters
+    -----
+    frequencies : array
+        Frequencies for which to calculate the power-law in arbitrary units.
+    index_hi : float, default=2.
+        Power-law index at frequencies lower than &#39;frequency&#39;.
+    index_lo : float, default=1.
+        Power-law index at frequencies higher than &#39;frequency&#39;.
+    frequency : float, default=0.1
+        Frequency of the power-law break in same unit as &#39;frequencies&#39;.
+    amplitude : float, default=10.
+        Amplitude at &#39;frequency&#39; in arbitrary unit.
+
+    Returns
+    -----
+        Array of same length as input &#39;frequencies&#39;.
+
+    Notes
+    -----
+    Can be used as a generic shape for the power spectrum of a simulated
+    light curve.
+    &#34;&#34;&#34;
+
+    return np.where(
+            frequencies &gt; frequency,
+            amplitude * np.power(frequencies / frequency, -index_hi),
+            amplitude * np.power(frequencies / frequency, -index_lo))</code></pre>
+</details>
+</dd>
+<dt id="lcsim.LightCurveSimulator.get_lcs"><code class="name flex">
+<span>def <span class="ident">get_lcs</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the simulated light curves.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>None</code></strong></dt>
+<dd>&nbsp;</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>out</code></strong> :&ensp;<code>list</code></dt>
+<dd>List of simulated light curves, each an ArtificialLightCurve
+instance.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_lcs(self):
+    &#34;&#34;&#34;Returns the simulated light curves.
+
+    Parameters
+    -----
+    None
+
+    Returns
+    -----
+    out : list
+        List of simulated light curves, each an ArtificialLightCurve
+        instance.
+    &#34;&#34;&#34;
+
+    lcs = [ArtificialLightCurve(self.time, flux, self.lc_type) \
+           for flux in self.lightcurves]
+
+    return lcs</code></pre>
+</details>
+</dd>
+<dt id="lcsim.LightCurveSimulator.kneemodel"><code class="name flex">
+<span>def <span class="ident">kneemodel</span></span>(<span>self, frequencies, index=1.0, amplitude=10.0, frequency=0.1)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns an array of amplitudes following a constant profile that
+changes into a power-law around a given frequency.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>frequencies</code></strong> :&ensp;<code>1darray</code></dt>
+<dd>Frequencies for which to calculate the power-law in arbitrary
+units.</dd>
+<dt>index : float, default=1.</dt>
+<dt>Power-law index.</dt>
+<dt>amplitude : float, default=10.</dt>
+<dt>Constant amplitude at frequencies below 'frequency' in arbitrary</dt>
+<dt>unit.</dt>
+<dt><strong><code>frequency</code></strong> :&ensp;<code>float</code>, default=<code>0.1</code></dt>
+<dd>Frequency
+in same unit as 'frequencies' at which profile changes
+into a power-law.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>out</code></strong> :&ensp;<code>1darray</code></dt>
+<dd>Array of same length as input 'frequencies'.</dd>
+</dl>
+<h2 id="notes">Notes</h2>
+<p>Can be used as a generic shape for the power spectrum of a simulated
+light curve.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def kneemodel(self, frequencies, index=1., amplitude=10., frequency=0.1):
+    &#34;&#34;&#34;Returns an array of amplitudes following a constant profile that
+    changes into a power-law around a given frequency.
+
+    Parameters
+    -----
+    frequencies : 1darray
+        Frequencies for which to calculate the power-law in arbitrary
+        units.
+    index : float, default=1.
+        Power-law index.
+    amplitude : float, default=10.
+        Constant amplitude at frequencies below &#39;frequency&#39; in arbitrary
+        unit.
+    frequency : float, default=0.1
+        Frequency  in same unit as &#39;frequencies&#39; at which profile changes
+        into a power-law.
+
+    Returns
+    -----
+    out : 1darray
+        Array of same length as input &#39;frequencies&#39;.
+
+    Notes
+    -----
+    Can be used as a generic shape for the power spectrum of a simulated
+    light curve.
+    &#34;&#34;&#34;
+
+    return amplitude * np.power(1 + np.power(frequencies / frequency, 2),
+                                -index / 2.)</code></pre>
+</details>
+</dd>
+<dt id="lcsim.LightCurveSimulator.multi_logn"><code class="name flex">
+<span>def <span class="ident">multi_logn</span></span>(<span>self, x, *params)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Multi-component log-normal function.</p>
+<p>Returns the function values at position x.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>x</code></strong> :&ensp;<code>float</code> or <code>np.ndarray</code></dt>
+<dd>Function is evaluated at these positions.</dd>
+<dt><strong><code>params</code></strong> :&ensp;<code>list</code></dt>
+<dd>Function parameters. For each log-normal component three
+parameters: peak position, peak amplitude, peak width. For multiple
+components append tripplets of these parameters (e.g.
+[pos1, amp1, wid1, pos2, amp2, wid2]).</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>out</code></strong> :&ensp;<code>float</code> or <code>np.ndarray</code></dt>
+<dd>Function evaluated at x.</dd>
+</dl>
+<h2 id="notes">Notes</h2>
+<p>Can be used as a generic shape for the probability density of a
+simulated light curve.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def multi_logn(self, x, *params):
+    &#34;&#34;&#34;Multi-component log-normal function.
+
+    Returns the function values at position x.
+
+    Parameters
+    ------
+    x : float or np.ndarray
+        Function is evaluated at these positions.
+    params : list
+        Function parameters. For each log-normal component three
+        parameters: peak position, peak amplitude, peak width. For multiple
+        components append tripplets of these parameters (e.g.
+        [pos1, amp1, wid1, pos2, amp2, wid2]).
+
+    Returns
+    -----
+    out : float or np.ndarray
+        Function evaluated at x.
+
+    Notes
+    -----
+    Can be used as a generic shape for the probability density of a
+    simulated light curve.
+    &#34;&#34;&#34;
+
+    y = np.zeros_like(x)
+    for i in range(0, len(params), 3):
+        pos = params[i]
+        amp = params[i+1]
+        wid = params[i+2]
+        y = y + amp * np.exp( -((np.log(x) - np.log(pos)) / wid)**2)
+
+    return y</code></pre>
+</details>
+</dd>
+<dt id="lcsim.LightCurveSimulator.powerlaw"><code class="name flex">
+<span>def <span class="ident">powerlaw</span></span>(<span>self, frequencies, index=1.0, amplitude=10.0, frequency=0.1)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns an array of amplitudes following a power-law over the input
+frequencies.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>frequencies</code></strong> :&ensp;<code>1darray</code></dt>
+<dd>Frequencies for which to calculate the power-law in arbitrary
+units.</dd>
+<dt>index : float, default=1.</dt>
+<dt>Power-law index.</dt>
+<dt>amplitude : float, default=10.</dt>
+<dt>Power-law amplitude at 'frequency' in arbitrary unit.</dt>
+<dt><strong><code>frequency</code></strong> :&ensp;<code>float</code>, default=<code>0.1</code></dt>
+<dd>Frequency for the given 'amplitude' in same unit as 'frequencies'.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>out</code></strong> :&ensp;<code>1darray</code></dt>
+<dd>Array of same length as input 'frequencies'.</dd>
+</dl>
+<h2 id="notes">Notes</h2>
+<p>Can be used as a generic shape for the power spectrum of a simulated
+light curve.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def powerlaw(self, frequencies, index=1., amplitude=10., frequency=0.1):
+    &#34;&#34;&#34;Returns an array of amplitudes following a power-law over the input
+    frequencies.
+
+    Parameters
+    -----
+    frequencies : 1darray
+        Frequencies for which to calculate the power-law in arbitrary
+        units.
+    index : float, default=1.
+        Power-law index.
+    amplitude : float, default=10.
+        Power-law amplitude at &#39;frequency&#39; in arbitrary unit.
+    frequency : float, default=0.1
+        Frequency for the given &#39;amplitude&#39; in same unit as &#39;frequencies&#39;.
+
+    Returns
+    -----
+    out : 1darray
+        Array of same length as input &#39;frequencies&#39;.
+
+    Notes
+    -----
+    Can be used as a generic shape for the power spectrum of a simulated
+    light curve.
+    &#34;&#34;&#34;
+
+    return amplitude * np.power(frequencies / frequency, -index)</code></pre>
+</details>
+</dd>
+<dt id="lcsim.LightCurveSimulator.rescale"><code class="name flex">
+<span>def <span class="ident">rescale</span></span>(<span>self, mean, std)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Rescale the light curves.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>mean</code></strong> :&ensp;<code>float</code></dt>
+<dd>The simulated light curves will be shifted such that they have this
+mean value.</dd>
+<dt><strong><code>std</code></strong> :&ensp;<code>float</code></dt>
+<dd>The simulated light curves will be scaled such that they have this
+standard deviation.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>None</code></dt>
+<dd>&nbsp;</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>Warning</code></dt>
+<dd>Raise when the simulated light curves are of Emmanoulopoulos-type.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def rescale(self, mean, std):
+    &#34;&#34;&#34;Rescale the light curves.
+
+    Parameters
+    -----
+    mean : float
+        The simulated light curves will be shifted such that they have this
+        mean value.
+    std : float
+        The simulated light curves will be scaled such that they have this
+        standard deviation.
+
+    Returns
+    -----
+    None
+
+    Raises
+    -----
+    Warning
+        Raise when the simulated light curves are of Emmanoulopoulos-type.
+    &#34;&#34;&#34;
+
+    if self.lc_type == &#39;EMP&#39;:
+        raise Warning(
+                &#34;Rescaling Emmanoulopoulos-type light curves is not &#34; \
+                &#34;recommended.&#34;)
+
+    for i, lightcurve in enumerate(self.lightcurves):
+        mean_cur = lightcurve.mean()
+        std_cur = lightcurve.std()
+        scale_factor = std / std_cur
+        self.lightcurves[i] = (lightcurve - mean_cur) * scale_factor + mean</code></pre>
+</details>
+</dd>
+<dt id="lcsim.LightCurveSimulator.set_time_sampling"><code class="name flex">
+<span>def <span class="ident">set_time_sampling</span></span>(<span>self, time_total, time_sampling)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create an instance of LightCurveSimulator.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>time_total</code></strong> :&ensp;<code>float</code></dt>
+<dd>Set the total time for the simulated data.</dd>
+<dt><strong><code>time_sampling</code></strong> :&ensp;<code>float</code></dt>
+<dd>Set the time sampling for the simulated data.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>None</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def set_time_sampling(self, time_total, time_sampling):
+    &#34;&#34;&#34;Create an instance of LightCurveSimulator.
+
+    Parameters
+    -----
+    time_total : float
+        Set the total time for the simulated data.
+    time_sampling : float
+        Set the time sampling for the simulated data.
+
+    Returns
+    -----
+    None
+    &#34;&#34;&#34;
+
+    self.time_total = time_total
+    self.time_sampling = time_sampling
+
+    # number of data points of the simulated data:
+    self.ndp = int(ceil(time_total / time_sampling)) + 1
+
+    # create data time steps:
+    self._create_timesteps()</code></pre>
+</details>
+</dd>
+<dt id="lcsim.LightCurveSimulator.sim_emp"><code class="name flex">
+<span>def <span class="ident">sim_emp</span></span>(<span>self, spec_shape, spec_args, pdf, pdf_params=None, pdf_range=None, nlcs=1, iterations=100, keep_non_converged=False, threshold=0.01)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a simulated light curve with a specified PSD and PDF.</p>
+<p>This method combines the two steps of producting a Gaussian light curve
+with a given PSD [1] and adjusting its PDF to a specified PDF [2].</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>spec_shape</code></strong> :&ensp;<code>func</code></dt>
+<dd>Function that takes an array of frequencies and 'spec_args' as
+input and calculates a spectrum for those frequencies.</dd>
+<dt><strong><code>spec_args</code></strong> :&ensp;<code>list</code></dt>
+<dd>Function arguments to 'spec_shape'.</dd>
+<dt><strong><code>pdf</code></strong> :&ensp;<code>numpy.ndarray</code> or <code>callable</code></dt>
+<dd>When providing flux data in a numpy.array the method will calculate
+an ECDF of the input data and draw random flux values from that
+ECDF.
+When providing a callable function the method will use that
+function to draw random flux values. Parameters for the function
+need to be provided in 'pdf_params'</dd>
+<dt><strong><code>pdf_params</code></strong> :&ensp;<code>list</code>, default=<code>None</code></dt>
+<dd>When a callable function is given to 'pdf', corresponding
+parameters need to be given to 'pdf_params'.</dd>
+<dt><strong><code>pdf_range</code></strong> :&ensp;<code>list</code></dt>
+<dd>List of two elements. Random flux values will be drawn from the
+given PDF between the two limits provided by 'pdf_range'. Required
+only when a callable function is given to 'pdf'. Does not have an
+effect, when a numpy.ndarray is given to 'pdf'.</dd>
+<dt><strong><code>nlcs</code></strong> :&ensp;<code>int</code>, default=<code>1</code></dt>
+<dd>Set the number of light curves that are produced. See notes below.</dd>
+<dt><strong><code>iterations</code></strong> :&ensp;<code>int</code>, default=<code>100</code></dt>
+<dd>The algorithm [1] is iterative. This value sets a maximum number of
+iterations to avoid infinite loops.</dd>
+<dt><strong><code>keep_non_converged</code></strong> :&ensp;<code>bool</code> or <code>str</code>, default=<code>False</code></dt>
+<dd>If True the result is returned even if the algorithm [1] did not
+converge.
+If False and the algorithm [1] did not converge, False is returned.
+If set to 'ask', a notification is written asking how to proceed.</dd>
+<dt><strong><code>threshold</code></strong> :&ensp;<code>float</code>, default=<code>0.01</code></dt>
+<dd>Defines when the algorithm [1] is considered as converged.
+Iterations are stopped when maximum difference between the current
+and the previous light curve does not exceed this 'threshold'.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>None</code></dt>
+<dd>&nbsp;</dd>
+</dl>
+<h2 id="notes">Notes</h2>
+<p>The method will initially produce one long Gaussian light curve with a
+total time N times longer than the final total time, where N is set by
+'nlcs'. This long light curve is then split into N individual pieces.
+Producing one initial long light curves means that power at frequencies
+N times lower than the final total time is included in the noise
+process. Setting ncls&gt;1 allows to include low-frequency power.
+The adjustment of the PDF is then applied to every split light curve
+individually.</p>
+<h2 id="references">References</h2>
+<p>[1] Timmer and Koenig, 1995, 'On generating power law noise', A&amp;A, 300,
+707
+[2] Emmanoulopoulos et al, 2013, MNRAS, 433, 907</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sim_emp(
+        self, spec_shape, spec_args, pdf, pdf_params=None, pdf_range=None,
+        nlcs=1,  iterations=100, keep_non_converged=False, threshold=0.01):
+    &#34;&#34;&#34;Create a simulated light curve with a specified PSD and PDF.
+
+    This method combines the two steps of producting a Gaussian light curve
+    with a given PSD [1] and adjusting its PDF to a specified PDF [2].
+
+    Parameters
+    -----
+    spec_shape : func
+        Function that takes an array of frequencies and &#39;spec_args&#39; as
+        input and calculates a spectrum for those frequencies.
+    spec_args : list
+        Function arguments to &#39;spec_shape&#39;.
+    pdf : numpy.ndarray or callable
+        When providing flux data in a numpy.array the method will calculate
+        an ECDF of the input data and draw random flux values from that
+        ECDF.
+        When providing a callable function the method will use that
+        function to draw random flux values. Parameters for the function
+        need to be provided in &#39;pdf_params&#39;
+    pdf_params : list, default=None
+        When a callable function is given to &#39;pdf&#39;, corresponding
+        parameters need to be given to &#39;pdf_params&#39;.
+    pdf_range : list
+        List of two elements. Random flux values will be drawn from the
+        given PDF between the two limits provided by &#39;pdf_range&#39;. Required
+        only when a callable function is given to &#39;pdf&#39;. Does not have an
+        effect, when a numpy.ndarray is given to &#39;pdf&#39;.
+    nlcs : int, default=1
+        Set the number of light curves that are produced. See notes below.
+    iterations : int, default=100
+        The algorithm [1] is iterative. This value sets a maximum number of
+        iterations to avoid infinite loops.
+    keep_non_converged : bool or str, default=False
+        If True the result is returned even if the algorithm [1] did not
+        converge.
+        If False and the algorithm [1] did not converge, False is returned.
+        If set to &#39;ask&#39;, a notification is written asking how to proceed.
+    threshold : float, default=0.01
+        Defines when the algorithm [1] is considered as converged.
+        Iterations are stopped when maximum difference between the current
+        and the previous light curve does not exceed this &#39;threshold&#39;.
+
+    Returns
+    -----
+    None
+
+    Notes
+    -----
+    The method will initially produce one long Gaussian light curve with a
+    total time N times longer than the final total time, where N is set by
+    &#39;nlcs&#39;. This long light curve is then split into N individual pieces.
+    Producing one initial long light curves means that power at frequencies
+    N times lower than the final total time is included in the noise
+    process. Setting ncls&gt;1 allows to include low-frequency power.
+    The adjustment of the PDF is then applied to every split light curve
+    individually.
+
+    References
+    -----
+    [1] Timmer and Koenig, 1995, &#39;On generating power law noise&#39;, A&amp;A, 300,
+        707
+    [2] Emmanoulopoulos et al, 2013, MNRAS, 433, 907
+    &#34;&#34;&#34;
+
+    self.sim_tk(spec_shape, spec_args, nlcs=nlcs)
+    self.adjust_pdf(
+            pdf, pdf_params=pdf_params, pdf_range=pdf_range,
+            iterations=iterations, keep_non_converged=keep_non_converged,
+            threshold=threshold)</code></pre>
+</details>
+</dd>
+<dt id="lcsim.LightCurveSimulator.sim_tk"><code class="name flex">
+<span>def <span class="ident">sim_tk</span></span>(<span>self, spec_shape, spec_args, nlcs=1, seed=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Simulates one/multiple equally sampled light curve(s) following a
+random noise process with given a spectral shape of the power spectral
+density [1].</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>spec_shape</code></strong> :&ensp;<code>func</code></dt>
+<dd>Function that takes an array of frequencies and 'spec_args' as
+input and calculates a spectrum for those frequencies.</dd>
+<dt><strong><code>spec_args</code></strong> :&ensp;<code>list</code></dt>
+<dd>Function arguments to 'spec_shape'.</dd>
+<dt><strong><code>nlcs</code></strong> :&ensp;<code>int</code>, default=<code>1</code></dt>
+<dd>Set the number of light curves that are produced. See notes below.</dd>
+<dt><strong><code>seed</code></strong> :&ensp;<code>int</code>, default=<code>False</code></dt>
+<dd>Sets a seed for the random generator to get a reproducable result.
+For testing only.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>None</code></dt>
+<dd>&nbsp;</dd>
+</dl>
+<h2 id="notes">Notes</h2>
+<p>The method will initially produce one long light curve with a total
+time N times longer than the final total time, where N is set by
+'nlcs'. This long light curve is then split into N individual pieces.
+Producing one initial long light curves means that power at frequencies
+N times lower than the final total time is included in the noise
+process. Setting ncls&gt;1 allows to include low-frequency power.</p>
+<h2 id="references">References</h2>
+<p>[1] Timmer and Koenig, 1995, 'On generating power law noise', A&amp;A, 300,
+707</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sim_tk(self, spec_shape, spec_args, nlcs=1, seed=False):
+    &#34;&#34;&#34;Simulates one/multiple equally sampled light curve(s) following a
+    random noise process with given a spectral shape of the power spectral
+    density [1].
+
+    Parameters
+    -----
+    spec_shape : func
+        Function that takes an array of frequencies and &#39;spec_args&#39; as
+        input and calculates a spectrum for those frequencies.
+    spec_args : list
+        Function arguments to &#39;spec_shape&#39;.
+    nlcs : int, default=1
+        Set the number of light curves that are produced. See notes below.
+    seed : int, default=False
+        Sets a seed for the random generator to get a reproducable result.
+        For testing only.
+
+    Returns
+    -----
+    None
+
+    Notes
+    -----
+    The method will initially produce one long light curve with a total
+    time N times longer than the final total time, where N is set by
+    &#39;nlcs&#39;. This long light curve is then split into N individual pieces.
+    Producing one initial long light curves means that power at frequencies
+    N times lower than the final total time is included in the noise
+    process. Setting ncls&gt;1 allows to include low-frequency power.
+
+    References
+    -----
+    [1] Timmer and Koenig, 1995, &#39;On generating power law noise&#39;, A&amp;A, 300,
+        707
+    &#34;&#34;&#34;
+
+    # get total time of long light curve:
+    time_total = self.time_sampling * self.ndp * nlcs
+
+    # simulate long lightcurve:
+    lightcurve = self._sim_tk(
+            time_total, self.time_sampling, spec_shape, spec_args,
+            seed=seed)
+    lightcurve = lightcurve[:-1]
+
+    # one light curve: store final data:
+    if nlcs == 1:
+        self.lightcurves = [lightcurve]
+
+    # multiple light curves: reshape to short light curves:
+    else:
+        shape = (nlcs, self.ndp)
+        lightcurves = lightcurve[:self.ndp*nlcs].reshape(shape)
+        self.lightcurves = []
+        for lc in lightcurves:
+            # normalize to zero mean:
+            lc /= np.mean(lc)
+            self.lightcurves.append(lc)
+
+    self.lc_type = &#39;TK&#39;
+    self.lc_scale = &#39;None&#39;</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="lcsim.ArtificialLightCurve" href="#lcsim.ArtificialLightCurve">ArtificialLightCurve</a></code></h4>
+<ul class="">
+<li><code><a title="lcsim.ArtificialLightCurve.add_errors" href="#lcsim.ArtificialLightCurve.add_errors">add_errors</a></code></li>
+<li><code><a title="lcsim.ArtificialLightCurve.data" href="#lcsim.ArtificialLightCurve.data">data</a></code></li>
+<li><code><a title="lcsim.ArtificialLightCurve.resample" href="#lcsim.ArtificialLightCurve.resample">resample</a></code></li>
+<li><code><a title="lcsim.ArtificialLightCurve.rescale" href="#lcsim.ArtificialLightCurve.rescale">rescale</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="lcsim.LightCurveSimulator" href="#lcsim.LightCurveSimulator">LightCurveSimulator</a></code></h4>
+<ul class="">
+<li><code><a title="lcsim.LightCurveSimulator.adjust_pdf" href="#lcsim.LightCurveSimulator.adjust_pdf">adjust_pdf</a></code></li>
+<li><code><a title="lcsim.LightCurveSimulator.brokenpowerlaw" href="#lcsim.LightCurveSimulator.brokenpowerlaw">brokenpowerlaw</a></code></li>
+<li><code><a title="lcsim.LightCurveSimulator.get_lcs" href="#lcsim.LightCurveSimulator.get_lcs">get_lcs</a></code></li>
+<li><code><a title="lcsim.LightCurveSimulator.kneemodel" href="#lcsim.LightCurveSimulator.kneemodel">kneemodel</a></code></li>
+<li><code><a title="lcsim.LightCurveSimulator.multi_logn" href="#lcsim.LightCurveSimulator.multi_logn">multi_logn</a></code></li>
+<li><code><a title="lcsim.LightCurveSimulator.powerlaw" href="#lcsim.LightCurveSimulator.powerlaw">powerlaw</a></code></li>
+<li><code><a title="lcsim.LightCurveSimulator.rescale" href="#lcsim.LightCurveSimulator.rescale">rescale</a></code></li>
+<li><code><a title="lcsim.LightCurveSimulator.set_time_sampling" href="#lcsim.LightCurveSimulator.set_time_sampling">set_time_sampling</a></code></li>
+<li><code><a title="lcsim.LightCurveSimulator.sim_emp" href="#lcsim.LightCurveSimulator.sim_emp">sim_emp</a></code></li>
+<li><code><a title="lcsim.LightCurveSimulator.sim_tk" href="#lcsim.LightCurveSimulator.sim_tk">sim_tk</a></code></li>
+<li><code><a title="lcsim.LightCurveSimulator.suggest_time_sampling" href="#lcsim.LightCurveSimulator.suggest_time_sampling">suggest_time_sampling</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>
