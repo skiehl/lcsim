@@ -11,10 +11,11 @@ from statsmodels.distributions import ECDF
 __author__ = "Sebastian Kiehlmann"
 __credits__ = ["Sebastian Kiehlmann"]
 __license__ = "GPL"
-__version__ = "2.0"
+__version__ = "2.1"
 __maintainer__ = "Sebastian Kiehlmann"
-__email__ = "skiehlmann@mail.de"
+__email__ = "skiehl@caltech.edu"
 __status__ = "Production"
+
 
 #==============================================================================
 # CLASSES
@@ -289,8 +290,8 @@ class ArtificialLightCurve:
         if isinstance(time_steps, float):
             # time step is shorter than original time sampling:
             if time_steps <= self.time_orig_sampling:
-                print 'Requested time step is shorter or equal to original ' \
-                      'sampling. resample() aborted.'
+                print('Requested time step is shorter or equal to original '
+                      'sampling. resample() aborted.')
                 return False
 
             # time step is a multiple of the original sampling:
@@ -308,7 +309,7 @@ class ArtificialLightCurve:
                     self.error_sim = False
                     self.flux_err = None
                     self.flux_unc = None
-                    print 'Note: resampling removed the error simulation.'
+                    print('Note: resampling removed the error simulation.')
 
                 return True
 
@@ -346,6 +347,76 @@ class ArtificialLightCurve:
         time_diff = np.diff(self.time_res)
         self.time_res_sampling = np.median(time_diff)
         self.size = self.time_res.size
+
+    #--------------------------------------------------------------------------
+    def rescale(self, mean, std):
+        """Rescale the light curves.
+
+        Parameters
+        -----
+        mean : float
+            The simulated light curves will be shifted such that they have this
+            mean value.
+        std : float
+            The simulated light curves will be scaled such that they have this
+            standard deviation.
+
+        Returns
+        -----
+        None
+
+        Raises
+        -----
+        Warning
+            Raise when the simulated light curves are of Emmanoulopoulos-type.
+
+        Notes
+        -----
+        The rescaling is applied to the originally sampled and (if applicable)
+        to the resampled data. If simulated errors were applied before, those
+        do not affect the rescaled data. New errors will be applied after the
+        rescaling.
+        """
+
+        if self.lc_type == 'EMP':
+            raise Warning(
+                    "Rescaling Emmanoulopoulos-type light curves is not " \
+                    "recommended.")
+
+        # rescale original and resampled data:
+        if self.resampled:
+            mean_cur = np.mean(self.flux_res)
+            std_cur = np.std(self.flux_res)
+            scale_factor = std / std_cur
+            self.flux_res = (self.flux_res - mean_cur) * scale_factor + mean
+            self.flux_orig = (self.flux_orig - mean_cur) * scale_factor + mean
+
+        # rescale original data:
+        else:
+            mean_cur = np.mean(self.flux_orig)
+            std_cur = np.std(self.flux_orig)
+            scale_factor = std / std_cur
+            self.flux_orig = (self.flux_orig - mean_cur) * scale_factor + mean
+
+        # apply new error simulation:
+        if self.error_sim:
+            self._add_errors()
+
+    #--------------------------------------------------------------------------
+    def _add_errors(self):
+        """Draws random Gaussian errors and adds them to simulated data.
+
+        Returns
+        -----
+        None
+        """
+
+        err = np.random.normal(loc=0, scale=self.flux_unc, size=self.size)
+
+        if self.resampled:
+            self.flux_err = self.flux_res + err
+        else:
+            self.flux_err = self.flux_orig + err
 
     #--------------------------------------------------------------------------
     def add_errors(self, uncertainties, params=None):
@@ -419,12 +490,7 @@ class ArtificialLightCurve:
         else:
             raise ValueError("Unsupported input for 'uncertainties'.")
 
-        # apply errors:
-        err = np.random.normal(loc=0, scale=self.flux_unc, size=self.size)
-        if self.resampled:
-            self.flux_err = self.flux_res + err
-        else:
-            self.flux_err = self.flux_orig + err
+        self._add_errors()
 
     #--------------------------------------------------------------------------
     def data(self, get_all=False):
@@ -579,14 +645,14 @@ class LightCurveSimulator:
             sim_sampling = sampling_mean / factor
         sim_total = total_time * factor
 
-        print 'Total time:         {0:8.3f}'.format(total_time)
-        print 'Min. sampling:      {0:8.3f}'.format(sampling_min)
-        print 'Max. sampling:      {0:8.3f}'.format(sampling_max)
-        print 'Mean sampling:      {0:8.3f}'.format(sampling_mean)
-        print 'Median sampling:    {0:8.3f}'.format(sampling_median)
-        print 'Suggested'
-        print 'Maximum sampling:   {0:8.3f}'.format(sim_sampling)
-        print 'Minimum total time: {0:8.3f}'.format(sim_total)
+        print('Total time:         {0:8.3f}'.format(total_time))
+        print('Min. sampling:      {0:8.3f}'.format(sampling_min))
+        print('Max. sampling:      {0:8.3f}'.format(sampling_max))
+        print('Mean sampling:      {0:8.3f}'.format(sampling_mean))
+        print('Median sampling:    {0:8.3f}'.format(sampling_median))
+        print('Suggested')
+        print('Maximum sampling:   {0:8.3f}'.format(sim_sampling))
+        print('Minimum total time: {0:8.3f}'.format(sim_total))
 
         return sim_total, sim_sampling
 
@@ -817,6 +883,8 @@ class LightCurveSimulator:
         # set spectrum:
         freq = np.fft.rfftfreq(ndp, time_sampling)
         freq[0] = 1
+        if not callable(spec_shape):
+            spec_shape = eval('self.{0:s}'.format(spec_shape))
         spectrum = spec_shape(freq[1:], *spec_args)
         spectrum[0] = 0
         del freq
@@ -915,6 +983,40 @@ class LightCurveSimulator:
 
         self.lc_type = 'TK'
         self.lc_scale = 'None'
+
+    #--------------------------------------------------------------------------
+    def rescale(self, mean, std):
+        """Rescale the light curves.
+
+        Parameters
+        -----
+        mean : float
+            The simulated light curves will be shifted such that they have this
+            mean value.
+        std : float
+            The simulated light curves will be scaled such that they have this
+            standard deviation.
+
+        Returns
+        -----
+        None
+
+        Raises
+        -----
+        Warning
+            Raise when the simulated light curves are of Emmanoulopoulos-type.
+        """
+
+        if self.lc_type == 'EMP':
+            raise Warning(
+                    "Rescaling Emmanoulopoulos-type light curves is not " \
+                    "recommended.")
+
+        for i, lightcurve in enumerate(self.lightcurves):
+            mean_cur = lightcurve.mean()
+            std_cur = lightcurve.std()
+            scale_factor = std / std_cur
+            self.lightcurves[i] = (lightcurve - mean_cur) * scale_factor + mean
 
     #--------------------------------------------------------------------------
     def _adjust_pdf(
@@ -1089,8 +1191,8 @@ class LightCurveSimulator:
 
         # check that the PDFs have not been adjusted yet:
         if self.lc_type == 'EMP':
-            print 'Light curve PDFs have already been adjusted. ' \
-                  'adjust_pdf() aborted!'
+            print('Light curve PDFs have already been adjusted. ' \
+                  'adjust_pdf() aborted!')
             return None
 
         # iterate through light curves:
@@ -1205,88 +1307,3 @@ class LightCurveSimulator:
                for flux in self.lightcurves]
 
         return lcs
-
-
-#==============================================================================
-# FUNCTIONS
-#==============================================================================
-
-def powerlaw(frequencies, index=1., amplitude=10., frequency=0.1):
-    """Returns an array of amplitudes following a power-law over the input
-    frequencies.
-
-    Parameters
-    -----
-    frequencies : 1darray
-        Frequencies for which to calculate the power-law in arbitrary units.
-    index : float, default=1.
-        Power-law index.
-    amplitude : float, default=10.
-        Power-law amplitude at 'frequency' in arbitrary unit.
-    frequency : float, default=0.1
-        Frequency for the given 'amplitude' in same unit as 'frequencies'.
-
-    Returns
-    -----
-    out : 1darray
-        Array of same length as input 'frequencies'.
-    """
-
-    return amplitude *np.power(frequencies /frequency, -index)
-
-#==============================================================================
-
-def kneemodel(frequencies, index=1., amplitude=10., frequency=0.1):
-    """Returns an array of amplitudes following a constant profile that changes
-    into a power-law around a given frequency.
-
-    Parameters
-    -----
-    frequencies : 1darray
-        Frequencies for which to calculate the power-law in arbitrary units.
-    index : float, default=1.
-        Power-law index.
-    amplitude : float, default=10.
-        Constant amplitude at frequencies below 'frequency' in arbitrary unit.
-    frequency : float, default=0.1
-        Frequency  in same unit as 'frequencies' at which profile changes
-        into a power-law.
-
-    Returns
-    -----
-    out : 1darray
-        Array of same length as input 'frequencies'.
-    """
-
-    return amplitude *np.power(1 +np.power(frequencies /frequency, 2),
-                               -index /2.)
-
-
-#==============================================================================
-
-def brokenpowerlaw(
-        frequencies, index_lo=1., index_hi=2., amplitude=10., frequency=0.1):
-    """Returns an array of amplitudes following a broken power-law.
-
-    Parameters
-    -----
-    frequencies : array
-        Frequencies for which to calculate the power-law in arbitrary units.
-    index_hi : float, default=2.
-        Power-law index at frequencies lower than 'frequency'.
-    index_lo : float, default=1.
-        Power-law index at frequencies higher than 'frequency'.
-    frequency : float, default=0.1
-        Frequency of the power-law break in same unit as 'frequencies'.
-    amplitude : float, default=10.
-        Amplitude at 'frequency' in arbitrary unit.
-
-    Returns
-    -----
-        Array of same length as input 'frequencies'.
-    """
-
-    return np.where(frequencies>frequency,
-                    amplitude *np.power(frequencies /frequency, -index_hi),
-                    amplitude *np.power(frequencies /frequency, -index_lo))
-
