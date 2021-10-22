@@ -1114,7 +1114,7 @@ class LightCurveSimulator:
         else:
             # ask what to do:
             if keep_non_converged == 'ask':
-                inp = raw_input(
+                inp = input(
                         'No convergence reached within {0:d} iterations. ' \
                         'Keep (y), throw away (n), or try again (r)?'.format(
                                 iterations))
