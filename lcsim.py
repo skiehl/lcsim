@@ -321,7 +321,7 @@ class ArtificialLightCurve:
         if isinstance(time_steps, np.ndarray):
             # check that time steps are within total time:
             time_steps -= np.min(time_steps)
-            sel = time_steps < self.time_orig_total
+            sel = time_steps <= self.time_orig_total
             self.time_res = time_steps[sel]
             self.resampled = 'specific'
 
