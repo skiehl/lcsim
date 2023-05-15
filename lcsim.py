@@ -34,10 +34,6 @@ class ArtificialLightCurve:
             Time steps.
         flux : np.ndarray
             Flux values.
-
-        Returns
-        -----
-        out : ArtificialLightCurve-instance
         """
 
         self.time_orig = time
@@ -560,7 +556,7 @@ class LightCurveSimulator:
     """Simulate blazar light curves as a random noise process."""
 
     #--------------------------------------------------------------------------
-    def __init__(self, time_total, time_sampling):
+    def __init__(self, time_total, time_sampling, leakage=10):
         """Create an instance of LightCurveSimulator.
 
         Parameters
@@ -569,23 +565,17 @@ class LightCurveSimulator:
             Set the total time for the simulated data.
         time_sampling : float
             Set the time sampling for the simulated data.
-
-        Returns
-        -----
-        out : LightCurveSimulator-instance
+        leakage : float, default=10
+            The total time of a simulation will be increased by this factor,
+            which must be larger than 1. This will include power at
+            frequencies lower than that corresponding to the total time in the
+            simulated data.
         """
 
-        self.time_total = time_total
-        self.time_sampling = time_sampling
-
-        # number of data points of the simulated data:
-        self.ndp = int(ceil(time_total / time_sampling)) + 1
-
-        # create data time steps:
-        self._create_timesteps()
+        self.set_time_sampling(time_total, time_sampling, leakage=leakage)
 
     #--------------------------------------------------------------------------
-    def set_time_sampling(self, time_total, time_sampling):
+    def set_time_sampling(self, time_total, time_sampling, leakage=10):
         """Create an instance of LightCurveSimulator.
 
         Parameters
@@ -594,20 +584,57 @@ class LightCurveSimulator:
             Set the total time for the simulated data.
         time_sampling : float
             Set the time sampling for the simulated data.
+        leakage : float, default=10
+            The total time of a simulation will be increased by this factor,
+            which must be larger than 1. This will include power at
+            frequencies lower than that corresponding to the total time in the
+            simulated data.
+
+        Raises
+        -----
+        ValueError
+            Raised, if time_total, time_sampling, or leakage is no float-like.
+            Raised, if leakage is smaller than 1.
 
         Returns
         -----
         None
         """
 
+        # check inputs:
+        try:
+            time_total = float(time_total)
+        except:
+            raise ValueError("'time_total' must be float-like.")
+
+        try:
+            time_sampling = float(time_sampling)
+        except:
+            raise ValueError("'time_sampling' must be float-like.")
+
+        try:
+            leakage = float(leakage)
+        except:
+            raise ValueError("'leakage' must be float-like.")
+
+        if leakage < 1:
+            raise ValueError("'leakage' must be equal to or larger than 1.")
+
+        # save parameters:
         self.time_total = time_total
         self.time_sampling = time_sampling
+        self.leakage = leakage
 
-        # number of data points of the simulated data:
-        self.ndp = int(ceil(time_total / time_sampling)) + 1
+        # number of data points for initial simulation:
+        ndp_init = int(ceil(time_total * leakage / time_sampling)) + 1
+        self.ndp_init = ndp_init
 
-        # create data time steps:
-        self._create_timesteps()
+        # number of data points and time steps for final simulation(s):
+        ndp = int(ceil(time_total / time_sampling)) + 1
+        time_total = time_sampling * (ndp - 1)
+        time = np.linspace(0, time_total, ndp)
+        self.ndp = ndp
+        self.time = time
 
     #--------------------------------------------------------------------------
     @staticmethod
@@ -655,16 +682,6 @@ class LightCurveSimulator:
         print('Minimum total time: {0:8.3f}'.format(sim_total))
 
         return sim_total, sim_sampling
-
-    #--------------------------------------------------------------------------
-    def _create_timesteps(self):
-        """Creates time steps based on total time and time sampling.
-        """
-
-        # adjust total time:
-        time_total = self.time_sampling * (self.ndp - 1)
-
-        self.time = np.linspace(0, time_total, self.ndp)
 
     #--------------------------------------------------------------------------
     def powerlaw(self, frequencies, index=1., amplitude=10., frequency=0.1):
@@ -841,9 +858,33 @@ class LightCurveSimulator:
         return rand
 
     #--------------------------------------------------------------------------
-    def _sim_tk(
-            self, time_total, time_sampling, spec_shape, spec_args,
-            seed=False):
+    def _iterations(self, nlcs):
+        """Calculate how many simulations are needed to create a given number
+        of light curves.
+
+        nlcs : int
+            Number of light curves
+
+        Parameters
+        -----
+        nlcs : int
+            Number of light curves.
+
+        Returns
+        -----
+        out, out : int, int
+            Number of simulations needed to create the intended number of
+            light curves.
+            Number of light curves that can be extracted from one iteration.
+        """
+
+        nlcs_per_iter = (self.ndp_init - 1) // (self.ndp - 1)
+        n_iter = ceil(nlcs / nlcs_per_iter)
+
+        return n_iter, nlcs_per_iter
+
+    #--------------------------------------------------------------------------
+    def _sim_tk(self, spec_shape, spec_args, seed=False):
         """Helper function that is called by self.sim_tk().
 
         This function implements the Timmer & Koenig, 1995 [1] algorithm for
@@ -852,10 +893,6 @@ class LightCurveSimulator:
 
         Parameters
         -----
-        time_total : float
-            Length of the simulation in arbitrary time unit.
-        time_sampling : float
-            Length of the sampling interval in same unit as 'time'.
         spec_shape : func
             Function that takes an array of frequencies and 'spec_args' as
             input and calculates a spectrum for those frequencies.
@@ -877,11 +914,8 @@ class LightCurveSimulator:
             707
         """
 
-        # get number of data points:
-        ndp = int(ceil(time_total / time_sampling)) + 1
-
         # set spectrum:
-        freq = np.fft.rfftfreq(ndp, time_sampling)
+        freq = np.fft.rfftfreq(self.ndp_init, self.time_sampling)
         freq[0] = 1
         if not callable(spec_shape):
             spec_shape = eval('self.{0:s}'.format(spec_shape))
@@ -895,25 +929,24 @@ class LightCurveSimulator:
         coef = np.random.normal(size=(2, spectrum.shape[0]))
 
         # if N is even the Nyquist frequency is real:
-        if ndp%2 == 0:
+        if self.ndp_init % 2 == 0:
             coef[-1,1] = 0.
 
         # complex coefficients:
         coef = coef[0] + 1j * coef[1]
 
         # scale coefficients with spectrum:
-        #coef *= np.sqrt(0.5 * spectrum) # this is how it is defined in T&K95
-        #coef *= np.sqrt(0.5 * spectrum * ndp / sampling) # this is what I
-        # used in PhD thesis
-        coef *= np.sqrt(0.5 * spectrum * ndp) # this is what works to get
-        # correct PSD slope, see argument in PhD notebook
+        coef *= np.sqrt(0.5 * spectrum * self.ndp_init)
+        # above line is what works to get correct PSD slope, differs from
+        # definition in T&K95, see argument in PhD notebook
         # 1.2_AmplitudeProblem.ipynb
-        coef *= 10**(spec_args[0] * 2.5) # this is an empirical scaling factor
-        # to get the correct amplitude (approximately; would be better to
-        # understand where this is coming from)
+        coef *= 10**(spec_args[0] * 2.5)
+        # 2.5 is an empirical scaling factor to get the correct amplitude
+        # (approximately; would be better to understand where this is coming
+        # from)
 
         # inverse Fourier transform:
-        lightcurve = np.fft.irfft(coef, ndp)
+        lightcurve = np.fft.irfft(coef, self.ndp_init)
 
         # normalize to zero mean:
         lightcurve -= np.mean(lightcurve)
@@ -958,28 +991,18 @@ class LightCurveSimulator:
             707
         """
 
-        # get total time of long light curve:
-        time_total = self.time_sampling * self.ndp * nlcs
+        n_iter, nlcs_per_iter = self._iterations(nlcs)
+        self.lightcurves = []
 
-        # simulate long lightcurve:
-        lightcurve = self._sim_tk(
-                time_total, self.time_sampling, spec_shape, spec_args,
-                seed=seed)
-        lightcurve = lightcurve[:-1]
+        for i in range(n_iter):
+            # simulate long lightcurve:
+            lightcurve = self._sim_tk(spec_shape, spec_args, seed=seed)
 
-        # one light curve: store final data:
-        if nlcs == 1:
-            self.lightcurves = [lightcurve]
-
-        # multiple light curves: reshape to short light curves:
-        else:
-            shape = (nlcs, self.ndp)
-            lightcurves = lightcurve[:self.ndp*nlcs].reshape(shape)
-            self.lightcurves = []
-            for lc in lightcurves:
-                # normalize to zero mean:
-                lc /= np.mean(lc)
-                self.lightcurves.append(lc)
+            # extract shorter light curves:
+            for j in range(nlcs_per_iter):
+                m = j * (self.ndp - 1)
+                n = (j + 1) * (self.ndp - 1) + 1
+                self.lightcurves.append(lightcurve[m:n])
 
         self.lc_type = 'TK'
         self.lc_scale = 'None'
