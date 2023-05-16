@@ -3,15 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.8.1" />
+<meta name="generator" content="pdoc 0.9.2" />
 <title>lcsim API documentation</title>
 <meta name="description" content="Blazar light curve simulation." />
-<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
-<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
-<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
 <style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
 </head>
 <body>
 <main>
@@ -33,6 +35,7 @@
 from copy import deepcopy
 from math import ceil, exp
 import numpy as np
+from scipy.stats import kstest
 from statsmodels.distributions import ECDF
 
 __author__ = &#34;Sebastian Kiehlmann&#34;
@@ -52,7 +55,7 @@ class ArtificialLightCurve:
     &#34;&#34;&#34;Process an artificial light curve.&#34;&#34;&#34;
 
     #--------------------------------------------------------------------------
-    def __init__(self, time, flux, lc_type):
+    def __init__(self, time, flux, lc_type, pdf_pvalue=None, pdf_reject=None):
         &#34;&#34;&#34;Create an instance of ArtificialLightCurve.
 
         Parameters
@@ -61,10 +64,8 @@ class ArtificialLightCurve:
             Time steps.
         flux : np.ndarray
             Flux values.
-
-        Returns
-        -----
-        out : ArtificialLightCurve-instance
+        lc_type : str
+            Indicating the light curve simulation algorithm.
         &#34;&#34;&#34;
 
         self.time_orig = time
@@ -83,6 +84,13 @@ class ArtificialLightCurve:
         self.error_sim = False
         self.flux_err = None
         self.flux_unc = None
+
+        if pdf_pvalue is None:
+            self.pdf_pvalue = None
+            self.pdf_reject = None
+        else:
+            self.pdf_pvalue = float(pdf_pvalue)
+            self.pdf_reject = bool(pdf_reject)
 
     #--------------------------------------------------------------------------
     def __str__(self):
@@ -124,6 +132,11 @@ class ArtificialLightCurve:
             text += &#39;Distribution:   {0:&gt;18s}\n&#39;.format(self.error_sim)
             text += &#39;Median uncertainty:     {0:10.3f}\n&#39;.format(
                     np.median(self.flux_unc))
+
+        if self.pdf_pvalue is not None:
+            text += &#39;PDF checked-----------------------\n&#39;
+            text += &#39;p-value: {0:25.5f}\n&#39;.format(self.pdf_pvalue)
+            text += &#39;Accepted: {0:&gt;24}\n&#39;.format(str(not self.pdf_reject))
 
         return text
 
@@ -348,7 +361,7 @@ class ArtificialLightCurve:
         if isinstance(time_steps, np.ndarray):
             # check that time steps are within total time:
             time_steps -= np.min(time_steps)
-            sel = time_steps &lt; self.time_orig_total
+            sel = time_steps &lt;= self.time_orig_total
             self.time_res = time_steps[sel]
             self.resampled = &#39;specific&#39;
 
@@ -587,7 +600,7 @@ class LightCurveSimulator:
     &#34;&#34;&#34;Simulate blazar light curves as a random noise process.&#34;&#34;&#34;
 
     #--------------------------------------------------------------------------
-    def __init__(self, time_total, time_sampling):
+    def __init__(self, time_total, time_sampling, leakage=10):
         &#34;&#34;&#34;Create an instance of LightCurveSimulator.
 
         Parameters
@@ -596,23 +609,17 @@ class LightCurveSimulator:
             Set the total time for the simulated data.
         time_sampling : float
             Set the time sampling for the simulated data.
-
-        Returns
-        -----
-        out : LightCurveSimulator-instance
+        leakage : float, default=10
+            The total time of a simulation will be increased by this factor,
+            which must be larger than 1. This will include power at
+            frequencies lower than that corresponding to the total time in the
+            simulated data.
         &#34;&#34;&#34;
 
-        self.time_total = time_total
-        self.time_sampling = time_sampling
-
-        # number of data points of the simulated data:
-        self.ndp = int(ceil(time_total / time_sampling)) + 1
-
-        # create data time steps:
-        self._create_timesteps()
+        self.set_time_sampling(time_total, time_sampling, leakage=leakage)
 
     #--------------------------------------------------------------------------
-    def set_time_sampling(self, time_total, time_sampling):
+    def set_time_sampling(self, time_total, time_sampling, leakage=10):
         &#34;&#34;&#34;Create an instance of LightCurveSimulator.
 
         Parameters
@@ -621,20 +628,57 @@ class LightCurveSimulator:
             Set the total time for the simulated data.
         time_sampling : float
             Set the time sampling for the simulated data.
+        leakage : float, default=10
+            The total time of a simulation will be increased by this factor,
+            which must be larger than 1. This will include power at
+            frequencies lower than that corresponding to the total time in the
+            simulated data.
+
+        Raises
+        -----
+        ValueError
+            Raised, if time_total, time_sampling, or leakage is no float-like.
+            Raised, if leakage is smaller than 1.
 
         Returns
         -----
         None
         &#34;&#34;&#34;
 
+        # check inputs:
+        try:
+            time_total = float(time_total)
+        except:
+            raise ValueError(&#34;&#39;time_total&#39; must be float-like.&#34;)
+
+        try:
+            time_sampling = float(time_sampling)
+        except:
+            raise ValueError(&#34;&#39;time_sampling&#39; must be float-like.&#34;)
+
+        try:
+            leakage = float(leakage)
+        except:
+            raise ValueError(&#34;&#39;leakage&#39; must be float-like.&#34;)
+
+        if leakage &lt; 1:
+            raise ValueError(&#34;&#39;leakage&#39; must be equal to or larger than 1.&#34;)
+
+        # save parameters:
         self.time_total = time_total
         self.time_sampling = time_sampling
+        self.leakage = leakage
 
-        # number of data points of the simulated data:
-        self.ndp = int(ceil(time_total / time_sampling)) + 1
+        # number of data points for initial simulation:
+        ndp_init = int(ceil(time_total * leakage / time_sampling)) + 1
+        self.ndp_init = ndp_init
 
-        # create data time steps:
-        self._create_timesteps()
+        # number of data points and time steps for final simulation(s):
+        ndp = int(ceil(time_total / time_sampling)) + 1
+        time_total = time_sampling * (ndp - 1)
+        time = np.linspace(0, time_total, ndp)
+        self.ndp = ndp
+        self.time = time
 
     #--------------------------------------------------------------------------
     @staticmethod
@@ -682,16 +726,6 @@ class LightCurveSimulator:
         print(&#39;Minimum total time: {0:8.3f}&#39;.format(sim_total))
 
         return sim_total, sim_sampling
-
-    #--------------------------------------------------------------------------
-    def _create_timesteps(self):
-        &#34;&#34;&#34;Creates time steps based on total time and time sampling.
-        &#34;&#34;&#34;
-
-        # adjust total time:
-        time_total = self.time_sampling * (self.ndp - 1)
-
-        self.time = np.linspace(0, time_total, self.ndp)
 
     #--------------------------------------------------------------------------
     def powerlaw(self, frequencies, index=1., amplitude=10., frequency=0.1):
@@ -868,9 +902,33 @@ class LightCurveSimulator:
         return rand
 
     #--------------------------------------------------------------------------
-    def _sim_tk(
-            self, time_total, time_sampling, spec_shape, spec_args,
-            seed=False):
+    def _iterations(self, nlcs):
+        &#34;&#34;&#34;Calculate how many simulations are needed to create a given number
+        of light curves.
+
+        nlcs : int
+            Number of light curves
+
+        Parameters
+        -----
+        nlcs : int
+            Number of light curves.
+
+        Returns
+        -----
+        out, out : int, int
+            Number of simulations needed to create the intended number of
+            light curves.
+            Number of light curves that can be extracted from one iteration.
+        &#34;&#34;&#34;
+
+        nlcs_per_iter = (self.ndp_init - 1) // (self.ndp - 1)
+        n_iter = ceil(nlcs / nlcs_per_iter)
+
+        return n_iter, nlcs_per_iter
+
+    #--------------------------------------------------------------------------
+    def _sim_tk(self, spec_shape, spec_args, seed=False):
         &#34;&#34;&#34;Helper function that is called by self.sim_tk().
 
         This function implements the Timmer &amp; Koenig, 1995 [1] algorithm for
@@ -879,10 +937,6 @@ class LightCurveSimulator:
 
         Parameters
         -----
-        time_total : float
-            Length of the simulation in arbitrary time unit.
-        time_sampling : float
-            Length of the sampling interval in same unit as &#39;time&#39;.
         spec_shape : func
             Function that takes an array of frequencies and &#39;spec_args&#39; as
             input and calculates a spectrum for those frequencies.
@@ -904,11 +958,8 @@ class LightCurveSimulator:
             707
         &#34;&#34;&#34;
 
-        # get number of data points:
-        ndp = int(ceil(time_total / time_sampling)) + 1
-
         # set spectrum:
-        freq = np.fft.rfftfreq(ndp, time_sampling)
+        freq = np.fft.rfftfreq(self.ndp_init, self.time_sampling)
         freq[0] = 1
         if not callable(spec_shape):
             spec_shape = eval(&#39;self.{0:s}&#39;.format(spec_shape))
@@ -922,25 +973,24 @@ class LightCurveSimulator:
         coef = np.random.normal(size=(2, spectrum.shape[0]))
 
         # if N is even the Nyquist frequency is real:
-        if ndp%2 == 0:
+        if self.ndp_init % 2 == 0:
             coef[-1,1] = 0.
 
         # complex coefficients:
         coef = coef[0] + 1j * coef[1]
 
         # scale coefficients with spectrum:
-        #coef *= np.sqrt(0.5 * spectrum) # this is how it is defined in T&amp;K95
-        #coef *= np.sqrt(0.5 * spectrum * ndp / sampling) # this is what I
-        # used in PhD thesis
-        coef *= np.sqrt(0.5 * spectrum * ndp) # this is what works to get
-        # correct PSD slope, see argument in PhD notebook
+        coef *= np.sqrt(0.5 * spectrum * self.ndp_init)
+        # above line is what works to get correct PSD slope, differs from
+        # definition in T&amp;K95, see argument in PhD notebook
         # 1.2_AmplitudeProblem.ipynb
-        coef *= 10**(spec_args[0] * 2.5) # this is an empirical scaling factor
-        # to get the correct amplitude (approximately; would be better to
-        # understand where this is coming from)
+        coef *= 10**(spec_args[0] * 2.5)
+        # 2.5 is an empirical scaling factor to get the correct amplitude
+        # (approximately; would be better to understand where this is coming
+        # from)
 
         # inverse Fourier transform:
-        lightcurve = np.fft.irfft(coef, ndp)
+        lightcurve = np.fft.irfft(coef, self.ndp_init)
 
         # normalize to zero mean:
         lightcurve -= np.mean(lightcurve)
@@ -985,31 +1035,22 @@ class LightCurveSimulator:
             707
         &#34;&#34;&#34;
 
-        # get total time of long light curve:
-        time_total = self.time_sampling * self.ndp * nlcs
+        n_iter, nlcs_per_iter = self._iterations(nlcs)
+        self.lightcurves = []
 
-        # simulate long lightcurve:
-        lightcurve = self._sim_tk(
-                time_total, self.time_sampling, spec_shape, spec_args,
-                seed=seed)
-        lightcurve = lightcurve[:-1]
+        for i in range(n_iter):
+            # simulate long lightcurve:
+            lightcurve = self._sim_tk(spec_shape, spec_args, seed=seed)
 
-        # one light curve: store final data:
-        if nlcs == 1:
-            self.lightcurves = [lightcurve]
-
-        # multiple light curves: reshape to short light curves:
-        else:
-            shape = (nlcs, self.ndp)
-            lightcurves = lightcurve[:self.ndp*nlcs].reshape(shape)
-            self.lightcurves = []
-            for lc in lightcurves:
-                # normalize to zero mean:
-                lc /= np.mean(lc)
-                self.lightcurves.append(lc)
+            # extract shorter light curves:
+            for j in range(nlcs_per_iter):
+                m = j * (self.ndp - 1)
+                n = (j + 1) * (self.ndp - 1) + 1
+                self.lightcurves.append(lightcurve[m:n])
 
         self.lc_type = &#39;TK&#39;
         self.lc_scale = &#39;None&#39;
+        self.pdf_check = False
 
     #--------------------------------------------------------------------------
     def rescale(self, mean, std):
@@ -1141,7 +1182,7 @@ class LightCurveSimulator:
         else:
             # ask what to do:
             if keep_non_converged == &#39;ask&#39;:
-                inp = raw_input(
+                inp = input(
                         &#39;No convergence reached within {0:d} iterations. &#39; \
                         &#39;Keep (y), throw away (n), or try again (r)?&#39;.format(
                                 iterations))
@@ -1314,6 +1355,63 @@ class LightCurveSimulator:
                 pdf, pdf_params=pdf_params, pdf_range=pdf_range,
                 iterations=iterations, keep_non_converged=keep_non_converged,
                 threshold=threshold)
+        self.pdf_check = False
+
+    #--------------------------------------------------------------------------
+    def check_pdf(self, threshold, cdf, args=(), drop=False, verbose=0):
+        &#34;&#34;&#34;Check the CDF of the simulated light curves against a reference CDF.
+
+        Parameters
+        ----------
+        threshold : float
+            The p-value threshold for rejecting a simulation.
+        cdf : str, array_like, or callable
+            If array_like, it should be a 1-D array of observations of random
+            variables. If a callable, that callable is used to calculate the
+            cdf. If a string, it should be the name of a distribution in
+            scipy.stats, which will be used as the cdf function.
+        args : tuple, sequence, default=()
+            Distribution parameters, used if &#39;cdf&#39; is string or callable.
+        drop : bool, default=False
+            If True, simulations that are rejected are deleted. Otherwise,
+            simulations are just flagged.
+
+        Returns
+        -------
+        None
+        &#34;&#34;&#34;
+
+        n_lcs = len(self.lightcurves)
+        self.pdf_check = True
+        self.pdf_threshold = threshold
+        self.pdf_pvalues = np.zeros(n_lcs)
+        self.pdf_reject = np.zeros(n_lcs, dtype=bool)
+
+        for i, lightcurve in enumerate(self.lightcurves):
+            pvalue = kstest(lightcurve, cdf, args=args).pvalue
+            reject = pvalue &lt; threshold
+            self.pdf_pvalues[i] = pvalue
+            self.pdf_reject[i] = reject
+
+
+        n_reject = np.sum(self.pdf_reject)
+        n_accept = n_lcs - n_reject
+        self.pdf_accept_rate = n_accept / n_lcs
+
+        if drop:
+            for i in np.nonzero(self.pdf_reject)[0][::-1]:
+                del self.lightcurves[i]
+
+            sel = ~self.pdf_reject
+            self.pdf_pvalues = self.pdf_pvalues[sel]
+            self.pdf_reject = self.pdf_reject[sel]
+
+        if verbose:
+            info = f&#39;{n_reject} LCs rejected out of {n_lcs}. Acceptance &#39; \
+                   f&#39;rate: {self.pdf_accept_rate*100:.1f} %.&#39;
+            print(info)
+
+        return n_accept, n_lcs
 
     #--------------------------------------------------------------------------
     def get_lcs(self):
@@ -1330,8 +1428,15 @@ class LightCurveSimulator:
             instance.
         &#34;&#34;&#34;
 
-        lcs = [ArtificialLightCurve(self.time, flux, self.lc_type) \
-               for flux in self.lightcurves]
+        if self.pdf_check:
+            lcs = [ArtificialLightCurve(
+                        self.time, flux, self.lc_type, self.pdf_pvalues[i],
+                        self.pdf_reject[i]) \
+                   for i, flux in enumerate(self.lightcurves)]
+
+        else:
+            lcs = [ArtificialLightCurve(self.time, flux, self.lc_type) \
+                   for flux in self.lightcurves]
 
         return lcs</code></pre>
 </details>
@@ -1347,7 +1452,7 @@ class LightCurveSimulator:
 <dl>
 <dt id="lcsim.ArtificialLightCurve"><code class="flex name class">
 <span>class <span class="ident">ArtificialLightCurve</span></span>
-<span>(</span><span>time, flux, lc_type)</span>
+<span>(</span><span>time, flux, lc_type, pdf_pvalue=None, pdf_reject=None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Process an artificial light curve.</p>
@@ -1358,11 +1463,8 @@ class LightCurveSimulator:
 <dd>Time steps.</dd>
 <dt><strong><code>flux</code></strong> :&ensp;<code>np.ndarray</code></dt>
 <dd>Flux values.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>out</code></strong> :&ensp;<code>ArtificialLightCurve-instance</code></dt>
-<dd>&nbsp;</dd>
+<dt><strong><code>lc_type</code></strong> :&ensp;<code>str</code></dt>
+<dd>Indicating the light curve simulation algorithm.</dd>
 </dl></div>
 <details class="source">
 <summary>
@@ -1372,7 +1474,7 @@ class LightCurveSimulator:
     &#34;&#34;&#34;Process an artificial light curve.&#34;&#34;&#34;
 
     #--------------------------------------------------------------------------
-    def __init__(self, time, flux, lc_type):
+    def __init__(self, time, flux, lc_type, pdf_pvalue=None, pdf_reject=None):
         &#34;&#34;&#34;Create an instance of ArtificialLightCurve.
 
         Parameters
@@ -1381,10 +1483,8 @@ class LightCurveSimulator:
             Time steps.
         flux : np.ndarray
             Flux values.
-
-        Returns
-        -----
-        out : ArtificialLightCurve-instance
+        lc_type : str
+            Indicating the light curve simulation algorithm.
         &#34;&#34;&#34;
 
         self.time_orig = time
@@ -1403,6 +1503,13 @@ class LightCurveSimulator:
         self.error_sim = False
         self.flux_err = None
         self.flux_unc = None
+
+        if pdf_pvalue is None:
+            self.pdf_pvalue = None
+            self.pdf_reject = None
+        else:
+            self.pdf_pvalue = float(pdf_pvalue)
+            self.pdf_reject = bool(pdf_reject)
 
     #--------------------------------------------------------------------------
     def __str__(self):
@@ -1444,6 +1551,11 @@ class LightCurveSimulator:
             text += &#39;Distribution:   {0:&gt;18s}\n&#39;.format(self.error_sim)
             text += &#39;Median uncertainty:     {0:10.3f}\n&#39;.format(
                     np.median(self.flux_unc))
+
+        if self.pdf_pvalue is not None:
+            text += &#39;PDF checked-----------------------\n&#39;
+            text += &#39;p-value: {0:25.5f}\n&#39;.format(self.pdf_pvalue)
+            text += &#39;Accepted: {0:&gt;24}\n&#39;.format(str(not self.pdf_reject))
 
         return text
 
@@ -1668,7 +1780,7 @@ class LightCurveSimulator:
         if isinstance(time_steps, np.ndarray):
             # check that time steps are within total time:
             time_steps -= np.min(time_steps)
-            sel = time_steps &lt; self.time_orig_total
+            sel = time_steps &lt;= self.time_orig_total
             self.time_res = time_steps[sel]
             self.resampled = &#39;specific&#39;
 
@@ -2219,7 +2331,7 @@ construct a new series of time stamps.</p></div>
     if isinstance(time_steps, np.ndarray):
         # check that time steps are within total time:
         time_steps -= np.min(time_steps)
-        sel = time_steps &lt; self.time_orig_total
+        sel = time_steps &lt;= self.time_orig_total
         self.time_res = time_steps[sel]
         self.resampled = &#39;specific&#39;
 
@@ -2338,7 +2450,7 @@ rescaling.</p></div>
 </dd>
 <dt id="lcsim.LightCurveSimulator"><code class="flex name class">
 <span>class <span class="ident">LightCurveSimulator</span></span>
-<span>(</span><span>time_total, time_sampling)</span>
+<span>(</span><span>time_total, time_sampling, leakage=10)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Simulate blazar light curves as a random noise process.</p>
@@ -2349,11 +2461,11 @@ rescaling.</p></div>
 <dd>Set the total time for the simulated data.</dd>
 <dt><strong><code>time_sampling</code></strong> :&ensp;<code>float</code></dt>
 <dd>Set the time sampling for the simulated data.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>out</code></strong> :&ensp;<code>LightCurveSimulator-instance</code></dt>
-<dd>&nbsp;</dd>
+<dt><strong><code>leakage</code></strong> :&ensp;<code>float</code>, default=<code>10</code></dt>
+<dd>The total time of a simulation will be increased by this factor,
+which must be larger than 1. This will include power at
+frequencies lower than that corresponding to the total time in the
+simulated data.</dd>
 </dl></div>
 <details class="source">
 <summary>
@@ -2363,7 +2475,7 @@ rescaling.</p></div>
     &#34;&#34;&#34;Simulate blazar light curves as a random noise process.&#34;&#34;&#34;
 
     #--------------------------------------------------------------------------
-    def __init__(self, time_total, time_sampling):
+    def __init__(self, time_total, time_sampling, leakage=10):
         &#34;&#34;&#34;Create an instance of LightCurveSimulator.
 
         Parameters
@@ -2372,23 +2484,17 @@ rescaling.</p></div>
             Set the total time for the simulated data.
         time_sampling : float
             Set the time sampling for the simulated data.
-
-        Returns
-        -----
-        out : LightCurveSimulator-instance
+        leakage : float, default=10
+            The total time of a simulation will be increased by this factor,
+            which must be larger than 1. This will include power at
+            frequencies lower than that corresponding to the total time in the
+            simulated data.
         &#34;&#34;&#34;
 
-        self.time_total = time_total
-        self.time_sampling = time_sampling
-
-        # number of data points of the simulated data:
-        self.ndp = int(ceil(time_total / time_sampling)) + 1
-
-        # create data time steps:
-        self._create_timesteps()
+        self.set_time_sampling(time_total, time_sampling, leakage=leakage)
 
     #--------------------------------------------------------------------------
-    def set_time_sampling(self, time_total, time_sampling):
+    def set_time_sampling(self, time_total, time_sampling, leakage=10):
         &#34;&#34;&#34;Create an instance of LightCurveSimulator.
 
         Parameters
@@ -2397,20 +2503,57 @@ rescaling.</p></div>
             Set the total time for the simulated data.
         time_sampling : float
             Set the time sampling for the simulated data.
+        leakage : float, default=10
+            The total time of a simulation will be increased by this factor,
+            which must be larger than 1. This will include power at
+            frequencies lower than that corresponding to the total time in the
+            simulated data.
+
+        Raises
+        -----
+        ValueError
+            Raised, if time_total, time_sampling, or leakage is no float-like.
+            Raised, if leakage is smaller than 1.
 
         Returns
         -----
         None
         &#34;&#34;&#34;
 
+        # check inputs:
+        try:
+            time_total = float(time_total)
+        except:
+            raise ValueError(&#34;&#39;time_total&#39; must be float-like.&#34;)
+
+        try:
+            time_sampling = float(time_sampling)
+        except:
+            raise ValueError(&#34;&#39;time_sampling&#39; must be float-like.&#34;)
+
+        try:
+            leakage = float(leakage)
+        except:
+            raise ValueError(&#34;&#39;leakage&#39; must be float-like.&#34;)
+
+        if leakage &lt; 1:
+            raise ValueError(&#34;&#39;leakage&#39; must be equal to or larger than 1.&#34;)
+
+        # save parameters:
         self.time_total = time_total
         self.time_sampling = time_sampling
+        self.leakage = leakage
 
-        # number of data points of the simulated data:
-        self.ndp = int(ceil(time_total / time_sampling)) + 1
+        # number of data points for initial simulation:
+        ndp_init = int(ceil(time_total * leakage / time_sampling)) + 1
+        self.ndp_init = ndp_init
 
-        # create data time steps:
-        self._create_timesteps()
+        # number of data points and time steps for final simulation(s):
+        ndp = int(ceil(time_total / time_sampling)) + 1
+        time_total = time_sampling * (ndp - 1)
+        time = np.linspace(0, time_total, ndp)
+        self.ndp = ndp
+        self.time = time
 
     #--------------------------------------------------------------------------
     @staticmethod
@@ -2458,16 +2601,6 @@ rescaling.</p></div>
         print(&#39;Minimum total time: {0:8.3f}&#39;.format(sim_total))
 
         return sim_total, sim_sampling
-
-    #--------------------------------------------------------------------------
-    def _create_timesteps(self):
-        &#34;&#34;&#34;Creates time steps based on total time and time sampling.
-        &#34;&#34;&#34;
-
-        # adjust total time:
-        time_total = self.time_sampling * (self.ndp - 1)
-
-        self.time = np.linspace(0, time_total, self.ndp)
 
     #--------------------------------------------------------------------------
     def powerlaw(self, frequencies, index=1., amplitude=10., frequency=0.1):
@@ -2644,9 +2777,33 @@ rescaling.</p></div>
         return rand
 
     #--------------------------------------------------------------------------
-    def _sim_tk(
-            self, time_total, time_sampling, spec_shape, spec_args,
-            seed=False):
+    def _iterations(self, nlcs):
+        &#34;&#34;&#34;Calculate how many simulations are needed to create a given number
+        of light curves.
+
+        nlcs : int
+            Number of light curves
+
+        Parameters
+        -----
+        nlcs : int
+            Number of light curves.
+
+        Returns
+        -----
+        out, out : int, int
+            Number of simulations needed to create the intended number of
+            light curves.
+            Number of light curves that can be extracted from one iteration.
+        &#34;&#34;&#34;
+
+        nlcs_per_iter = (self.ndp_init - 1) // (self.ndp - 1)
+        n_iter = ceil(nlcs / nlcs_per_iter)
+
+        return n_iter, nlcs_per_iter
+
+    #--------------------------------------------------------------------------
+    def _sim_tk(self, spec_shape, spec_args, seed=False):
         &#34;&#34;&#34;Helper function that is called by self.sim_tk().
 
         This function implements the Timmer &amp; Koenig, 1995 [1] algorithm for
@@ -2655,10 +2812,6 @@ rescaling.</p></div>
 
         Parameters
         -----
-        time_total : float
-            Length of the simulation in arbitrary time unit.
-        time_sampling : float
-            Length of the sampling interval in same unit as &#39;time&#39;.
         spec_shape : func
             Function that takes an array of frequencies and &#39;spec_args&#39; as
             input and calculates a spectrum for those frequencies.
@@ -2680,11 +2833,8 @@ rescaling.</p></div>
             707
         &#34;&#34;&#34;
 
-        # get number of data points:
-        ndp = int(ceil(time_total / time_sampling)) + 1
-
         # set spectrum:
-        freq = np.fft.rfftfreq(ndp, time_sampling)
+        freq = np.fft.rfftfreq(self.ndp_init, self.time_sampling)
         freq[0] = 1
         if not callable(spec_shape):
             spec_shape = eval(&#39;self.{0:s}&#39;.format(spec_shape))
@@ -2698,25 +2848,24 @@ rescaling.</p></div>
         coef = np.random.normal(size=(2, spectrum.shape[0]))
 
         # if N is even the Nyquist frequency is real:
-        if ndp%2 == 0:
+        if self.ndp_init % 2 == 0:
             coef[-1,1] = 0.
 
         # complex coefficients:
         coef = coef[0] + 1j * coef[1]
 
         # scale coefficients with spectrum:
-        #coef *= np.sqrt(0.5 * spectrum) # this is how it is defined in T&amp;K95
-        #coef *= np.sqrt(0.5 * spectrum * ndp / sampling) # this is what I
-        # used in PhD thesis
-        coef *= np.sqrt(0.5 * spectrum * ndp) # this is what works to get
-        # correct PSD slope, see argument in PhD notebook
+        coef *= np.sqrt(0.5 * spectrum * self.ndp_init)
+        # above line is what works to get correct PSD slope, differs from
+        # definition in T&amp;K95, see argument in PhD notebook
         # 1.2_AmplitudeProblem.ipynb
-        coef *= 10**(spec_args[0] * 2.5) # this is an empirical scaling factor
-        # to get the correct amplitude (approximately; would be better to
-        # understand where this is coming from)
+        coef *= 10**(spec_args[0] * 2.5)
+        # 2.5 is an empirical scaling factor to get the correct amplitude
+        # (approximately; would be better to understand where this is coming
+        # from)
 
         # inverse Fourier transform:
-        lightcurve = np.fft.irfft(coef, ndp)
+        lightcurve = np.fft.irfft(coef, self.ndp_init)
 
         # normalize to zero mean:
         lightcurve -= np.mean(lightcurve)
@@ -2761,31 +2910,22 @@ rescaling.</p></div>
             707
         &#34;&#34;&#34;
 
-        # get total time of long light curve:
-        time_total = self.time_sampling * self.ndp * nlcs
+        n_iter, nlcs_per_iter = self._iterations(nlcs)
+        self.lightcurves = []
 
-        # simulate long lightcurve:
-        lightcurve = self._sim_tk(
-                time_total, self.time_sampling, spec_shape, spec_args,
-                seed=seed)
-        lightcurve = lightcurve[:-1]
+        for i in range(n_iter):
+            # simulate long lightcurve:
+            lightcurve = self._sim_tk(spec_shape, spec_args, seed=seed)
 
-        # one light curve: store final data:
-        if nlcs == 1:
-            self.lightcurves = [lightcurve]
-
-        # multiple light curves: reshape to short light curves:
-        else:
-            shape = (nlcs, self.ndp)
-            lightcurves = lightcurve[:self.ndp*nlcs].reshape(shape)
-            self.lightcurves = []
-            for lc in lightcurves:
-                # normalize to zero mean:
-                lc /= np.mean(lc)
-                self.lightcurves.append(lc)
+            # extract shorter light curves:
+            for j in range(nlcs_per_iter):
+                m = j * (self.ndp - 1)
+                n = (j + 1) * (self.ndp - 1) + 1
+                self.lightcurves.append(lightcurve[m:n])
 
         self.lc_type = &#39;TK&#39;
         self.lc_scale = &#39;None&#39;
+        self.pdf_check = False
 
     #--------------------------------------------------------------------------
     def rescale(self, mean, std):
@@ -2917,7 +3057,7 @@ rescaling.</p></div>
         else:
             # ask what to do:
             if keep_non_converged == &#39;ask&#39;:
-                inp = raw_input(
+                inp = input(
                         &#39;No convergence reached within {0:d} iterations. &#39; \
                         &#39;Keep (y), throw away (n), or try again (r)?&#39;.format(
                                 iterations))
@@ -3090,6 +3230,63 @@ rescaling.</p></div>
                 pdf, pdf_params=pdf_params, pdf_range=pdf_range,
                 iterations=iterations, keep_non_converged=keep_non_converged,
                 threshold=threshold)
+        self.pdf_check = False
+
+    #--------------------------------------------------------------------------
+    def check_pdf(self, threshold, cdf, args=(), drop=False, verbose=0):
+        &#34;&#34;&#34;Check the CDF of the simulated light curves against a reference CDF.
+
+        Parameters
+        ----------
+        threshold : float
+            The p-value threshold for rejecting a simulation.
+        cdf : str, array_like, or callable
+            If array_like, it should be a 1-D array of observations of random
+            variables. If a callable, that callable is used to calculate the
+            cdf. If a string, it should be the name of a distribution in
+            scipy.stats, which will be used as the cdf function.
+        args : tuple, sequence, default=()
+            Distribution parameters, used if &#39;cdf&#39; is string or callable.
+        drop : bool, default=False
+            If True, simulations that are rejected are deleted. Otherwise,
+            simulations are just flagged.
+
+        Returns
+        -------
+        None
+        &#34;&#34;&#34;
+
+        n_lcs = len(self.lightcurves)
+        self.pdf_check = True
+        self.pdf_threshold = threshold
+        self.pdf_pvalues = np.zeros(n_lcs)
+        self.pdf_reject = np.zeros(n_lcs, dtype=bool)
+
+        for i, lightcurve in enumerate(self.lightcurves):
+            pvalue = kstest(lightcurve, cdf, args=args).pvalue
+            reject = pvalue &lt; threshold
+            self.pdf_pvalues[i] = pvalue
+            self.pdf_reject[i] = reject
+
+
+        n_reject = np.sum(self.pdf_reject)
+        n_accept = n_lcs - n_reject
+        self.pdf_accept_rate = n_accept / n_lcs
+
+        if drop:
+            for i in np.nonzero(self.pdf_reject)[0][::-1]:
+                del self.lightcurves[i]
+
+            sel = ~self.pdf_reject
+            self.pdf_pvalues = self.pdf_pvalues[sel]
+            self.pdf_reject = self.pdf_reject[sel]
+
+        if verbose:
+            info = f&#39;{n_reject} LCs rejected out of {n_lcs}. Acceptance &#39; \
+                   f&#39;rate: {self.pdf_accept_rate*100:.1f} %.&#39;
+            print(info)
+
+        return n_accept, n_lcs
 
     #--------------------------------------------------------------------------
     def get_lcs(self):
@@ -3106,8 +3303,15 @@ rescaling.</p></div>
             instance.
         &#34;&#34;&#34;
 
-        lcs = [ArtificialLightCurve(self.time, flux, self.lc_type) \
-               for flux in self.lightcurves]
+        if self.pdf_check:
+            lcs = [ArtificialLightCurve(
+                        self.time, flux, self.lc_type, self.pdf_pvalues[i],
+                        self.pdf_reject[i]) \
+                   for i, flux in enumerate(self.lightcurves)]
+
+        else:
+            lcs = [ArtificialLightCurve(self.time, flux, self.lc_type) \
+                   for flux in self.lightcurves]
 
         return lcs</code></pre>
 </details>
@@ -3376,6 +3580,91 @@ light curve.</p></div>
             amplitude * np.power(frequencies / frequency, -index_lo))</code></pre>
 </details>
 </dd>
+<dt id="lcsim.LightCurveSimulator.check_pdf"><code class="name flex">
+<span>def <span class="ident">check_pdf</span></span>(<span>self, threshold, cdf, args=(), drop=False, verbose=0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Check the CDF of the simulated light curves against a reference CDF.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>threshold</code></strong> :&ensp;<code>float</code></dt>
+<dd>The p-value threshold for rejecting a simulation.</dd>
+<dt><strong><code>cdf</code></strong> :&ensp;<code>str, array_like,</code> or <code>callable</code></dt>
+<dd>If array_like, it should be a 1-D array of observations of random
+variables. If a callable, that callable is used to calculate the
+cdf. If a string, it should be the name of a distribution in
+scipy.stats, which will be used as the cdf function.</dd>
+<dt><strong><code>args</code></strong> :&ensp;<code>tuple, sequence</code>, default=<code>()</code></dt>
+<dd>Distribution parameters, used if 'cdf' is string or callable.</dd>
+<dt><strong><code>drop</code></strong> :&ensp;<code>bool</code>, default=<code>False</code></dt>
+<dd>If True, simulations that are rejected are deleted. Otherwise,
+simulations are just flagged.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>None</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def check_pdf(self, threshold, cdf, args=(), drop=False, verbose=0):
+    &#34;&#34;&#34;Check the CDF of the simulated light curves against a reference CDF.
+
+    Parameters
+    ----------
+    threshold : float
+        The p-value threshold for rejecting a simulation.
+    cdf : str, array_like, or callable
+        If array_like, it should be a 1-D array of observations of random
+        variables. If a callable, that callable is used to calculate the
+        cdf. If a string, it should be the name of a distribution in
+        scipy.stats, which will be used as the cdf function.
+    args : tuple, sequence, default=()
+        Distribution parameters, used if &#39;cdf&#39; is string or callable.
+    drop : bool, default=False
+        If True, simulations that are rejected are deleted. Otherwise,
+        simulations are just flagged.
+
+    Returns
+    -------
+    None
+    &#34;&#34;&#34;
+
+    n_lcs = len(self.lightcurves)
+    self.pdf_check = True
+    self.pdf_threshold = threshold
+    self.pdf_pvalues = np.zeros(n_lcs)
+    self.pdf_reject = np.zeros(n_lcs, dtype=bool)
+
+    for i, lightcurve in enumerate(self.lightcurves):
+        pvalue = kstest(lightcurve, cdf, args=args).pvalue
+        reject = pvalue &lt; threshold
+        self.pdf_pvalues[i] = pvalue
+        self.pdf_reject[i] = reject
+
+
+    n_reject = np.sum(self.pdf_reject)
+    n_accept = n_lcs - n_reject
+    self.pdf_accept_rate = n_accept / n_lcs
+
+    if drop:
+        for i in np.nonzero(self.pdf_reject)[0][::-1]:
+            del self.lightcurves[i]
+
+        sel = ~self.pdf_reject
+        self.pdf_pvalues = self.pdf_pvalues[sel]
+        self.pdf_reject = self.pdf_reject[sel]
+
+    if verbose:
+        info = f&#39;{n_reject} LCs rejected out of {n_lcs}. Acceptance &#39; \
+               f&#39;rate: {self.pdf_accept_rate*100:.1f} %.&#39;
+        print(info)
+
+    return n_accept, n_lcs</code></pre>
+</details>
+</dd>
 <dt id="lcsim.LightCurveSimulator.get_lcs"><code class="name flex">
 <span>def <span class="ident">get_lcs</span></span>(<span>self)</span>
 </code></dt>
@@ -3410,8 +3699,15 @@ instance.</dd>
         instance.
     &#34;&#34;&#34;
 
-    lcs = [ArtificialLightCurve(self.time, flux, self.lc_type) \
-           for flux in self.lightcurves]
+    if self.pdf_check:
+        lcs = [ArtificialLightCurve(
+                    self.time, flux, self.lc_type, self.pdf_pvalues[i],
+                    self.pdf_reject[i]) \
+               for i, flux in enumerate(self.lightcurves)]
+
+    else:
+        lcs = [ArtificialLightCurve(self.time, flux, self.lc_type) \
+               for flux in self.lightcurves]
 
     return lcs</code></pre>
 </details>
@@ -3669,7 +3965,7 @@ standard deviation.</dd>
 </details>
 </dd>
 <dt id="lcsim.LightCurveSimulator.set_time_sampling"><code class="name flex">
-<span>def <span class="ident">set_time_sampling</span></span>(<span>self, time_total, time_sampling)</span>
+<span>def <span class="ident">set_time_sampling</span></span>(<span>self, time_total, time_sampling, leakage=10)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Create an instance of LightCurveSimulator.</p>
@@ -3679,6 +3975,17 @@ standard deviation.</dd>
 <dd>Set the total time for the simulated data.</dd>
 <dt><strong><code>time_sampling</code></strong> :&ensp;<code>float</code></dt>
 <dd>Set the time sampling for the simulated data.</dd>
+<dt><strong><code>leakage</code></strong> :&ensp;<code>float</code>, default=<code>10</code></dt>
+<dd>The total time of a simulation will be increased by this factor,
+which must be larger than 1. This will include power at
+frequencies lower than that corresponding to the total time in the
+simulated data.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>ValueError</code></dt>
+<dd>Raised, if time_total, time_sampling, or leakage is no float-like.
+Raised, if leakage is smaller than 1.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
@@ -3689,7 +3996,7 @@ standard deviation.</dd>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def set_time_sampling(self, time_total, time_sampling):
+<pre><code class="python">def set_time_sampling(self, time_total, time_sampling, leakage=10):
     &#34;&#34;&#34;Create an instance of LightCurveSimulator.
 
     Parameters
@@ -3698,20 +4005,57 @@ standard deviation.</dd>
         Set the total time for the simulated data.
     time_sampling : float
         Set the time sampling for the simulated data.
+    leakage : float, default=10
+        The total time of a simulation will be increased by this factor,
+        which must be larger than 1. This will include power at
+        frequencies lower than that corresponding to the total time in the
+        simulated data.
+
+    Raises
+    -----
+    ValueError
+        Raised, if time_total, time_sampling, or leakage is no float-like.
+        Raised, if leakage is smaller than 1.
 
     Returns
     -----
     None
     &#34;&#34;&#34;
 
+    # check inputs:
+    try:
+        time_total = float(time_total)
+    except:
+        raise ValueError(&#34;&#39;time_total&#39; must be float-like.&#34;)
+
+    try:
+        time_sampling = float(time_sampling)
+    except:
+        raise ValueError(&#34;&#39;time_sampling&#39; must be float-like.&#34;)
+
+    try:
+        leakage = float(leakage)
+    except:
+        raise ValueError(&#34;&#39;leakage&#39; must be float-like.&#34;)
+
+    if leakage &lt; 1:
+        raise ValueError(&#34;&#39;leakage&#39; must be equal to or larger than 1.&#34;)
+
+    # save parameters:
     self.time_total = time_total
     self.time_sampling = time_sampling
+    self.leakage = leakage
 
-    # number of data points of the simulated data:
-    self.ndp = int(ceil(time_total / time_sampling)) + 1
+    # number of data points for initial simulation:
+    ndp_init = int(ceil(time_total * leakage / time_sampling)) + 1
+    self.ndp_init = ndp_init
 
-    # create data time steps:
-    self._create_timesteps()</code></pre>
+    # number of data points and time steps for final simulation(s):
+    ndp = int(ceil(time_total / time_sampling)) + 1
+    time_total = time_sampling * (ndp - 1)
+    time = np.linspace(0, time_total, ndp)
+    self.ndp = ndp
+    self.time = time</code></pre>
 </details>
 </dd>
 <dt id="lcsim.LightCurveSimulator.sim_emp"><code class="name flex">
@@ -3851,7 +4195,8 @@ individually.</p>
     self.adjust_pdf(
             pdf, pdf_params=pdf_params, pdf_range=pdf_range,
             iterations=iterations, keep_non_converged=keep_non_converged,
-            threshold=threshold)</code></pre>
+            threshold=threshold)
+    self.pdf_check = False</code></pre>
 </details>
 </dd>
 <dt id="lcsim.LightCurveSimulator.sim_tk"><code class="name flex">
@@ -3930,31 +4275,22 @@ process. Setting ncls&gt;1 allows to include low-frequency power.</p>
         707
     &#34;&#34;&#34;
 
-    # get total time of long light curve:
-    time_total = self.time_sampling * self.ndp * nlcs
+    n_iter, nlcs_per_iter = self._iterations(nlcs)
+    self.lightcurves = []
 
-    # simulate long lightcurve:
-    lightcurve = self._sim_tk(
-            time_total, self.time_sampling, spec_shape, spec_args,
-            seed=seed)
-    lightcurve = lightcurve[:-1]
+    for i in range(n_iter):
+        # simulate long lightcurve:
+        lightcurve = self._sim_tk(spec_shape, spec_args, seed=seed)
 
-    # one light curve: store final data:
-    if nlcs == 1:
-        self.lightcurves = [lightcurve]
-
-    # multiple light curves: reshape to short light curves:
-    else:
-        shape = (nlcs, self.ndp)
-        lightcurves = lightcurve[:self.ndp*nlcs].reshape(shape)
-        self.lightcurves = []
-        for lc in lightcurves:
-            # normalize to zero mean:
-            lc /= np.mean(lc)
-            self.lightcurves.append(lc)
+        # extract shorter light curves:
+        for j in range(nlcs_per_iter):
+            m = j * (self.ndp - 1)
+            n = (j + 1) * (self.ndp - 1) + 1
+            self.lightcurves.append(lightcurve[m:n])
 
     self.lc_type = &#39;TK&#39;
-    self.lc_scale = &#39;None&#39;</code></pre>
+    self.lc_scale = &#39;None&#39;
+    self.pdf_check = False</code></pre>
 </details>
 </dd>
 </dl>
@@ -3984,6 +4320,7 @@ process. Setting ncls&gt;1 allows to include low-frequency power.</p>
 <ul class="">
 <li><code><a title="lcsim.LightCurveSimulator.adjust_pdf" href="#lcsim.LightCurveSimulator.adjust_pdf">adjust_pdf</a></code></li>
 <li><code><a title="lcsim.LightCurveSimulator.brokenpowerlaw" href="#lcsim.LightCurveSimulator.brokenpowerlaw">brokenpowerlaw</a></code></li>
+<li><code><a title="lcsim.LightCurveSimulator.check_pdf" href="#lcsim.LightCurveSimulator.check_pdf">check_pdf</a></code></li>
 <li><code><a title="lcsim.LightCurveSimulator.get_lcs" href="#lcsim.LightCurveSimulator.get_lcs">get_lcs</a></code></li>
 <li><code><a title="lcsim.LightCurveSimulator.kneemodel" href="#lcsim.LightCurveSimulator.kneemodel">kneemodel</a></code></li>
 <li><code><a title="lcsim.LightCurveSimulator.multi_logn" href="#lcsim.LightCurveSimulator.multi_logn">multi_logn</a></code></li>
@@ -4001,9 +4338,7 @@ process. Setting ncls&gt;1 allows to include low-frequency power.</p>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
 </footer>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-<script>hljs.initHighlightingOnLoad()</script>
 </body>
 </html>
