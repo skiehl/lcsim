@@ -6,6 +6,7 @@
 from copy import deepcopy
 from math import ceil, exp
 import numpy as np
+from scipy.stats import kstest
 from statsmodels.distributions import ECDF
 
 __author__ = "Sebastian Kiehlmann"
@@ -25,7 +26,7 @@ class ArtificialLightCurve:
     """Process an artificial light curve."""
 
     #--------------------------------------------------------------------------
-    def __init__(self, time, flux, lc_type):
+    def __init__(self, time, flux, lc_type, pdf_pvalue=None, pdf_reject=None):
         """Create an instance of ArtificialLightCurve.
 
         Parameters
@@ -34,6 +35,8 @@ class ArtificialLightCurve:
             Time steps.
         flux : np.ndarray
             Flux values.
+        lc_type : str
+            Indicating the light curve simulation algorithm.
         """
 
         self.time_orig = time
@@ -52,6 +55,13 @@ class ArtificialLightCurve:
         self.error_sim = False
         self.flux_err = None
         self.flux_unc = None
+
+        if pdf_pvalue is None:
+            self.pdf_pvalue = None
+            self.pdf_reject = None
+        else:
+            self.pdf_pvalue = float(pdf_pvalue)
+            self.pdf_reject = bool(pdf_reject)
 
     #--------------------------------------------------------------------------
     def __str__(self):
@@ -93,6 +103,11 @@ class ArtificialLightCurve:
             text += 'Distribution:   {0:>18s}\n'.format(self.error_sim)
             text += 'Median uncertainty:     {0:10.3f}\n'.format(
                     np.median(self.flux_unc))
+
+        if self.pdf_pvalue is not None:
+            text += 'PDF checked-----------------------\n'
+            text += 'p-value: {0:25.5f}\n'.format(self.pdf_pvalue)
+            text += 'Accepted: {0:>24}\n'.format(str(not self.pdf_reject))
 
         return text
 
@@ -1006,6 +1021,7 @@ class LightCurveSimulator:
 
         self.lc_type = 'TK'
         self.lc_scale = 'None'
+        self.pdf_check = False
 
     #--------------------------------------------------------------------------
     def rescale(self, mean, std):
@@ -1310,6 +1326,63 @@ class LightCurveSimulator:
                 pdf, pdf_params=pdf_params, pdf_range=pdf_range,
                 iterations=iterations, keep_non_converged=keep_non_converged,
                 threshold=threshold)
+        self.pdf_check = False
+
+    #--------------------------------------------------------------------------
+    def check_pdf(self, threshold, cdf, args=(), drop=False, verbose=0):
+        """Check the CDF of the simulated light curves against a reference CDF.
+
+        Parameters
+        ----------
+        threshold : float
+            The p-value threshold for rejecting a simulation.
+        cdf : str, array_like, or callable
+            If array_like, it should be a 1-D array of observations of random
+            variables. If a callable, that callable is used to calculate the
+            cdf. If a string, it should be the name of a distribution in
+            scipy.stats, which will be used as the cdf function.
+        args : tuple, sequence, default=()
+            Distribution parameters, used if 'cdf' is string or callable.
+        drop : bool, default=False
+            If True, simulations that are rejected are deleted. Otherwise,
+            simulations are just flagged.
+
+        Returns
+        -------
+        None
+        """
+
+        n_lcs = len(self.lightcurves)
+        self.pdf_check = True
+        self.pdf_threshold = threshold
+        self.pdf_pvalues = np.zeros(n_lcs)
+        self.pdf_reject = np.zeros(n_lcs, dtype=bool)
+
+        for i, lightcurve in enumerate(self.lightcurves):
+            pvalue = kstest(lightcurve, cdf, args=args).pvalue
+            reject = pvalue < threshold
+            self.pdf_pvalues[i] = pvalue
+            self.pdf_reject[i] = reject
+
+
+        n_reject = np.sum(self.pdf_reject)
+        n_accept = n_lcs - n_reject
+        self.pdf_accept_rate = n_accept / n_lcs
+
+        if drop:
+            for i in np.nonzero(self.pdf_reject)[0][::-1]:
+                del self.lightcurves[i]
+
+            sel = ~self.pdf_reject
+            self.pdf_pvalues = self.pdf_pvalues[sel]
+            self.pdf_reject = self.pdf_reject[sel]
+
+        if verbose:
+            info = f'{n_reject} LCs rejected out of {n_lcs}. Acceptance ' \
+                   f'rate: {self.pdf_accept_rate*100:.1f} %.'
+            print(info)
+
+        return n_accept, n_lcs
 
     #--------------------------------------------------------------------------
     def get_lcs(self):
@@ -1326,7 +1399,14 @@ class LightCurveSimulator:
             instance.
         """
 
-        lcs = [ArtificialLightCurve(self.time, flux, self.lc_type) \
-               for flux in self.lightcurves]
+        if self.pdf_check:
+            lcs = [ArtificialLightCurve(
+                        self.time, flux, self.lc_type, self.pdf_pvalues[i],
+                        self.pdf_reject[i]) \
+                   for i, flux in enumerate(self.lightcurves)]
+
+        else:
+            lcs = [ArtificialLightCurve(self.time, flux, self.lc_type) \
+                   for flux in self.lightcurves]
 
         return lcs
