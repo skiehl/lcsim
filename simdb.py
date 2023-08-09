@@ -19,6 +19,15 @@ class SQLiteConnection:
     def __init__(self, db_file):
         """Wrapper class for SQLite connection that allows the use of the
         python with-statement.
+
+        Parameters
+        ----------
+        db_file : str
+            File name of the database file.
+
+        Returns
+        -------
+        None
         """
 
         self.db_file = db_file
@@ -39,13 +48,39 @@ class DBConnectorSQLite:
 
     #--------------------------------------------------------------------------
     def __init__(self, db_file):
-        """SQLite database connector."""
+        """SQLite database connector.
+
+        Parameters
+        ----------
+        db_file : str
+            File name of the database file.
+
+        Returns
+        -------
+        None
+        """
 
         self.db_file = db_file
 
     #--------------------------------------------------------------------------
     def _query(self, connection, query, commit=False):
-        """TODO"""
+        """Query database.
+
+        Parameters
+        ----------
+        connection : sqlite3.Connection
+            Database connection.
+        query : str
+            SQL query.
+        commit : bool, optional
+            If True, changes to the database are commited. The default is
+            False.
+
+        Returns
+        -------
+        result : sqlite3.Cursor
+            Includes the query results.
+        """
 
         cursor = connection.cursor()
         result = cursor.execute(query)
@@ -58,6 +93,22 @@ class DBConnectorSQLite:
     #--------------------------------------------------------------------------
     def _get_sim_type_id(self, sim_type):
         """Get ID of simulation type.
+
+        Parameters
+        ----------
+        sim_type : str
+            Select the simulation type. Must be 'tk' or 'emp'.
+
+        Raises
+        ------
+        ValueError
+            Raised when the requested simulation type does not exist in the
+            database, i.e. when `sim_type` is not 'tk' or 'emp'.
+
+        Returns
+        -------
+        sim_type_id : int
+            Database ID of the simulation type.
         """
 
         with SQLiteConnection(self.db_file) as connection:
@@ -80,6 +131,24 @@ class DBConnectorSQLite:
     #--------------------------------------------------------------------------
     def _get_psd_type_id(self, psd_type):
         """Get ID of PSD type.
+
+        Parameters
+        ----------
+        psd_type : str
+            Select the PSD type. Must be 'powerlaw', 'brokenpowerlaw', or
+            'kneemodel'.
+
+        Raises
+        ------
+        ValueError
+            Raised when the requested PSD type does not exist in the database,
+            i.e. when `psd_type` is not 'powerlaw', 'brokenpowerlaw', or
+            'kneemodel'.
+
+        Returns
+        -------
+        psd_type_id : int
+            Database ID of the PSD type.
         """
 
         with SQLiteConnection(self.db_file) as connection:
@@ -101,6 +170,17 @@ class DBConnectorSQLite:
     #--------------------------------------------------------------------------
     def _add_sim_metadata(self, sim_meta):
         """Add simulated light curve meta data.
+
+        Parameters
+        ----------
+        sim_meta : dict
+            Dictionary of simulation metadata.
+
+        Returns
+        -------
+        sim_id : int
+            Returns the database simulation ID under which these metadata were
+            saved.
         """
 
         sim_id = self.number_of_sim() + 1
@@ -154,6 +234,18 @@ class DBConnectorSQLite:
     #--------------------------------------------------------------------------
     def _add_sim_data(self, sim_id, data):
         """Add simulated light curve data.
+
+        Parameters
+        ----------
+        sim_id : int
+            Database simulation ID.
+        data : structured np.ndarray
+            Simulated light curve data. Expected structured array column names:
+            'time', 'flux', 'flux_unc'.
+
+        Returns
+        -------
+        None
         """
 
         n = len(data['time'])
@@ -176,6 +268,21 @@ class DBConnectorSQLite:
     #--------------------------------------------------------------------------
     def create_db(self, db_file=None):
         """Create the simulation database.
+
+        Parameters
+        ----------
+        db_file : str
+            Database filename. If none is provided the filename provided with
+            the class instanciation is used. The default is None.
+
+        Returns
+        -------
+        None
+
+        Notes
+        -----
+        If a file with the provided name already exists, the user is asked,
+        whether or not it should be overwritten.
         """
 
         if db_file is None:
@@ -293,6 +400,17 @@ class DBConnectorSQLite:
     #--------------------------------------------------------------------------
     def add_sim(self, lightcurves):
         """Add simulated light curves to database.
+
+        Parameters
+        ----------
+        lightcurves : list of lcsim.ArtificialLightCurve instances
+            The light curves to be added to the database. Light curve data and
+            metadata is automatically extracted from the
+            ArtificialLightCurve instances.
+
+        Returns
+        -------
+        None
         """
 
         if type(lightcurves) is not list:
@@ -308,6 +426,11 @@ class DBConnectorSQLite:
     #--------------------------------------------------------------------------
     def number_of_sim(self):
         """Get number of stored simulations.
+
+        Returns
+        -------
+        n_sim : int
+            Number of stored simulations.
         """
 
         with SQLiteConnection(self.db_file) as connection:
@@ -337,8 +460,15 @@ class DBConnectorSQLite:
         Yields
         ------
         numpy.ndarray
-            Structured array with the simulated light curve.
+            Array with the simulated light curve. The three columns contain
+            time, flux, and flux uncertainty.
         """
+
+        # TODO: This is a simplistic interface to access the light curves.
+        # Improvements: (1) yield different data structure, e.g. structured
+        # array or ArtificialLightCurve instance. Include metadata in the
+        # latter? (2) Allow quering specific types of stored simulations or
+        # under specific conditions.
 
         # open database:
         with SQLiteConnection(self.db_file) as connection:
@@ -349,21 +479,21 @@ class DBConnectorSQLite:
                 i0 = i * cache
                 i1 = (i + 1) * cache
                 query = '''\
-                    SELECT flux, flux_err FROM flux
+                    SELECT sim_id, mjd, flux, flux_err
+                    FROM lightcurves
                     WHERE sim_id>{0} AND sim_id<={1};
                     '''.format(i0, i1)
                 result = self._query(connection, query).fetchall()
-                dtype = [('flux', float), ('flux_err', float)]
-                sim = np.array(result, dtype=dtype)
+                result = np.array(result).transpose()
 
-                # split into individual simulations:
-                m = sim.shape[0] // cache
+                # iterate through individual simulations:
+                for j in range(i0, i1):
+                    sel = np.nonzero(np.isclose(j+1, result[0]))[0]
+                    j0 = sel[0]
+                    j1 = sel[-1]
+                    sim = result[1:,j0:j1]
 
-                for j in range(cache):
-                    j0 = j * m
-                    j1 = (j + 1) * m
-
-                    yield sim[j0:j1]
+                    yield sim
 
 
 
