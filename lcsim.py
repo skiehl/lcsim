@@ -26,7 +26,7 @@ class ArtificialLightCurve:
     """Process an artificial light curve."""
 
     #--------------------------------------------------------------------------
-    def __init__(self, time, flux, lc_type, pdf_pvalue=None, pdf_reject=None):
+    def __init__(self, time, flux, sim_meta={}):
         """Create an instance of ArtificialLightCurve.
 
         Parameters
@@ -35,13 +35,16 @@ class ArtificialLightCurve:
             Time steps.
         flux : np.ndarray
             Flux values.
-        lc_type : str
+        sim_type : str
             Indicating the light curve simulation algorithm.
+
+        TODO
         """
 
         self.time_orig = time
         self.flux_orig = flux
-        self.lc_type = lc_type
+        self.sim_type = sim_meta['sim_type']
+
         self.time_orig_total = time[-1] - time[0]
         self.time_orig_sampling = time[1] - time[0]
         self.size = self.time_orig.size
@@ -56,12 +59,7 @@ class ArtificialLightCurve:
         self.flux_err = None
         self.flux_unc = None
 
-        if pdf_pvalue is None:
-            self.pdf_pvalue = None
-            self.pdf_reject = None
-        else:
-            self.pdf_pvalue = float(pdf_pvalue)
-            self.pdf_reject = bool(pdf_reject)
+        self.sim_meta = sim_meta
 
     #--------------------------------------------------------------------------
     def __str__(self):
@@ -69,10 +67,13 @@ class ArtificialLightCurve:
         """
 
         text = 'Artificial light curve\n'
-        text += 'Simulation type:        {0:>10s}\n'.format(self.lc_type)
-        text += 'Original time sampling: {0:10.3f}\n'.format(
+        text += 'Simulation type:        {0:>10s}\n'.format(self.sim_type)
+        text += 'PSD shape:              {0:>10s}\n'.format(
+                self.sim_meta['psd_type'])
+        text += 'Initial time sampling-------------\n'
+        text += 'Time step:              {0:10.3f}\n'.format(
                 self.time_orig_sampling)
-        text += 'Original total time:    {0:10.3f}\n'.format(
+        text += 'Total time:             {0:10.3f}\n'.format(
                 self.time_orig_total)
 
         if self.resampled == 'const':
@@ -104,10 +105,11 @@ class ArtificialLightCurve:
             text += 'Median uncertainty:     {0:10.3f}\n'.format(
                     np.median(self.flux_unc))
 
-        if self.pdf_pvalue is not None:
+        if 'pdf_pvalue' in self.sim_meta.keys():
             text += 'PDF checked-----------------------\n'
-            text += 'p-value: {0:25.5f}\n'.format(self.pdf_pvalue)
-            text += 'Accepted: {0:>24}\n'.format(str(not self.pdf_reject))
+            text += 'p-value: {0:25.5f}\n'.format(self.sim_meta['pdf_pvalue'])
+            text += 'Accepted: {0:>24}\n'.format(
+                    str(not self.sim_meta['pdf_reject']))
 
         return text
 
@@ -389,7 +391,7 @@ class ArtificialLightCurve:
         rescaling.
         """
 
-        if self.lc_type == 'EMP':
+        if self.sim_type == 'EMP':
             raise Warning(
                     "Rescaling Emmanoulopoulos-type light curves is not " \
                     "recommended.")
@@ -588,6 +590,19 @@ class LightCurveSimulator:
         """
 
         self.set_time_sampling(time_total, time_sampling, leakage=leakage)
+        self.lightcurves = []
+
+    #--------------------------------------------------------------------------
+    def number_of_sim(self):
+        """Return the number of currently stored simulations.
+
+        Returns
+        -------
+        int
+            Number of currently stored simulations.
+        """
+
+        return len(self.lightcurves)
 
     #--------------------------------------------------------------------------
     def set_time_sampling(self, time_total, time_sampling, leakage=10):
@@ -989,7 +1004,8 @@ class LightCurveSimulator:
 
         Returns
         -----
-        None
+        int
+            Number of simulated light curves.
 
         Notes
         -----
@@ -1019,9 +1035,15 @@ class LightCurveSimulator:
                 n = (j + 1) * (self.ndp - 1) + 1
                 self.lightcurves.append(lightcurve[m:n])
 
-        self.lc_type = 'TK'
+                if len(self.lightcurves) >= nlcs:
+                    break
+
+        self.sim_type = 'TK'
         self.lc_scale = 'None'
+        self.psd_type = spec_shape
         self.pdf_check = False
+
+        return len(self.lightcurves)
 
     #--------------------------------------------------------------------------
     def rescale(self, mean, std):
@@ -1046,7 +1068,7 @@ class LightCurveSimulator:
             Raise when the simulated light curves are of Emmanoulopoulos-type.
         """
 
-        if self.lc_type == 'EMP':
+        if self.sim_type == 'EMP':
             raise Warning(
                     "Rescaling Emmanoulopoulos-type light curves is not " \
                     "recommended.")
@@ -1128,6 +1150,8 @@ class LightCurveSimulator:
             raise ValueError(
                     "'pdf' needs to be a np.ndarray or a function.")
 
+        converged = False
+
         # iteration:
         for i in range(iterations):
             # calculate DFT, amplitudes:
@@ -1145,6 +1169,7 @@ class LightCurveSimulator:
 
             # check if process converged:
             if np.max(np.absolute(lc_adj -lc_sim) / lc_sim) < threshold:
+                converged = True
                 break
             else:
                 lc_sim = deepcopy(lc_adj)
@@ -1160,7 +1185,7 @@ class LightCurveSimulator:
                 if inp == 'y':
                     pass
                 elif inp == 'r':
-                    lc_sim = self._adjust_pdf(
+                    lc_sim, i, converged = self._adjust_pdf(
                             lightcurve, pdf, pdf_params=pdf_params,
                             pdf_range=pdf_range, iterations=iterations,
                             keep_non_converged=keep_non_converged,
@@ -1176,7 +1201,7 @@ class LightCurveSimulator:
             else:
                 lc_sim = False
 
-        return lc_sim
+        return lc_sim, i, converged
 
     #--------------------------------------------------------------------------
     def adjust_pdf(
@@ -1229,23 +1254,32 @@ class LightCurveSimulator:
         """
 
         # check that the PDFs have not been adjusted yet:
-        if self.lc_type == 'EMP':
+        if self.sim_type == 'EMP':
             print('Light curve PDFs have already been adjusted. ' \
                   'adjust_pdf() aborted!')
             return None
 
+        self.pdf_n_iter = []
+        self.pdf_converged = []
+
         # iterate through light curves:
         for i, lc in enumerate(self.lightcurves):
-            lc_adj = self._adjust_pdf(
+            lc_adj, n_iter, converged = self._adjust_pdf(
                     lc, pdf, pdf_params=pdf_params, pdf_range=pdf_range,
                     iterations=iterations,
                     keep_non_converged=keep_non_converged, threshold=threshold)
             self.lightcurves[i] = lc_adj
 
-        # remove non-converged light curves:
-        self.lightcurves = [lc for lc in self.lightcurves if lc is not False]
+            if lc_adj is not False:
+                self.pdf_n_iter.append(n_iter)
+                self.pdf_converged.append(converged)
 
-        self.lc_type = 'EMP'
+        # remove non-converged light curves:
+        if not keep_non_converged:
+            self.lightcurves = [
+                    lc for lc in self.lightcurves if lc is not False]
+
+        self.sim_type = 'EMP'
         if isinstance(pdf, ECDF):
             self.lc_scale = 'ECDF'
         elif callable(pdf):
@@ -1301,7 +1335,8 @@ class LightCurveSimulator:
 
         Returns
         -----
-        None
+        int
+            Number of simulated light curves.
 
         Notes
         -----
@@ -1328,6 +1363,8 @@ class LightCurveSimulator:
                 threshold=threshold)
         self.pdf_check = False
 
+        return len(self.lightcurves)
+
     #--------------------------------------------------------------------------
     def check_pdf(self, threshold, cdf, args=(), drop=False, verbose=0):
         """Check the CDF of the simulated light curves against a reference CDF.
@@ -1349,7 +1386,10 @@ class LightCurveSimulator:
 
         Returns
         -------
-        None
+        n_accept : int
+            Number of accepted light curves.
+        n_reject : int
+            Number of rejected light curves.
         """
 
         n_lcs = len(self.lightcurves)
@@ -1382,7 +1422,40 @@ class LightCurveSimulator:
                    f'rate: {self.pdf_accept_rate*100:.1f} %.'
             print(info)
 
-        return n_accept, n_lcs
+        return n_accept, n_reject
+
+    #--------------------------------------------------------------------------
+    def iter_lcs(self):
+        """Iterate through simulated light curves.
+
+        Parameters
+        -----
+        None
+
+        Yields
+        -----
+        out : ArtificialLightCurve
+            Simulated light curve.
+        """
+
+        for i, flux in enumerate(self.lightcurves):
+
+            # prepare simulation metadata:
+            sim_meta = {'sim_type': self.sim_type, 'psd_type': self.psd_type}
+
+            if self.sim_type == 'EMP':
+                sim_meta['pdf_n_iter'] = self.pdf_n_iter[i]
+                sim_meta['pdf_converged'] = self.pdf_converged[i]
+
+            if self.pdf_check:
+                sim_meta['pdf_pvalue'] = self.pdf_pvalues[i]
+                sim_meta['pdf_reject'] = self.pdf_reject[i]
+
+
+            lightcurve = ArtificialLightCurve(
+                    self.time, flux, sim_meta=sim_meta)
+
+            yield lightcurve
 
     #--------------------------------------------------------------------------
     def get_lcs(self):
@@ -1399,14 +1472,4 @@ class LightCurveSimulator:
             instance.
         """
 
-        if self.pdf_check:
-            lcs = [ArtificialLightCurve(
-                        self.time, flux, self.lc_type, self.pdf_pvalues[i],
-                        self.pdf_reject[i]) \
-                   for i, flux in enumerate(self.lightcurves)]
-
-        else:
-            lcs = [ArtificialLightCurve(self.time, flux, self.lc_type) \
-                   for flux in self.lightcurves]
-
-        return lcs
+        return list(self.iter_lcs())
