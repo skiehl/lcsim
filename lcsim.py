@@ -14,9 +14,8 @@ __credits__ = ["Sebastian Kiehlmann"]
 __license__ = "GPL"
 __version__ = "2.1"
 __maintainer__ = "Sebastian Kiehlmann"
-__email__ = "skiehl@caltech.edu"
+__email__ = "skiehlmann@mail.de"
 __status__ = "Production"
-
 
 #==============================================================================
 # CLASSES
