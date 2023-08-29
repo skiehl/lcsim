@@ -11,7 +11,7 @@ from statsmodels.distributions import ECDF
 
 __author__ = "Sebastian Kiehlmann"
 __credits__ = ["Sebastian Kiehlmann"]
-__license__ = "GPL"
+__license__ = "BSD 3"
 __version__ = "2.1"
 __maintainer__ = "Sebastian Kiehlmann"
 __email__ = "skiehlmann@mail.de"
