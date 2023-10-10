@@ -4,7 +4,9 @@
 """
 
 from copy import deepcopy
+from itertools import repeat
 from math import ceil, exp
+from multiprocessing import Manager, Pool
 import numpy as np
 from scipy.stats import kstest
 from statsmodels.distributions import ECDF
@@ -913,12 +915,40 @@ class LightCurveSimulator:
         return n_iter, nlcs_per_iter
 
     #--------------------------------------------------------------------------
-    def _sim_tk(self, spec_shape, spec_args, seed=False):
-        """Helper function that is called by self.sim_tk().
+    def _split_lc(self, lightcurve, nlcs_per_iter):
+        """Split long light curve into segments.
+
+        Parameters
+        ----------
+        lightcurve : numpy.ndarray
+            Simulated light curve.
+        nlcs_per_iter : int
+            Number of equally sized segments that the input light curve should
+            be split into.
+
+        Returns
+        -------
+        lightcurves : list of numpy.ndarray
+            The light curve segments.
+        """
+
+        lightcurves = []
+
+        for i in range(nlcs_per_iter):
+            m = i * (self.ndp - 1)
+            n = (i + 1) * (self.ndp - 1) + 1
+            lightcurves.append(lightcurve[m:n])
+
+        return lightcurves
+
+    #--------------------------------------------------------------------------
+    def _sim_tk(self, spec_shape, spec_args, n_splits=1, seed=False):
+        """Create Gaussian noise with a given spectrum.
 
         This function implements the Timmer & Koenig, 1995 [1] algorithm for
-        producing a single artificial light curve. See docstring of
-        self.sim_tk() for details.
+        producing an artificial light curve. See docstring of
+        self.sim_tk() for details. This is a helper function that is called by
+        self._wrapper_tk().
 
         Parameters
         -----
@@ -933,9 +963,10 @@ class LightCurveSimulator:
 
         Returns
         -----
-        out : numpy.ndarray
+        out : numpy.ndarray or list
             Simulated light curve following a random noise process with the
             input power spectrum.
+            If n_splits>1, a list of light curve segments is returned.
 
         References
         -----
@@ -983,7 +1014,51 @@ class LightCurveSimulator:
         return lightcurve
 
     #--------------------------------------------------------------------------
-    def sim_tk(self, spec_shape, spec_args, nlcs=1, seed=False):
+    def _wrapper_tk(
+            self, __, queue, spec_shape, spec_args, n_splits=1, seed=False):
+        """Helper function that is called by sim_tk() process pool to simulate
+        light curves and store them in a queue.
+
+        Parameters
+        -----
+        __ : range
+            Iterator for the repetition of the lightcurve simulation. Only
+            required for the parallel processing. Not required for this
+            function.
+        queue : multiprocessing.managers.AutoProxy[Queue]
+            Queue shared among processes for saving lightcurves.
+        spec_shape : func
+            Function that takes an array of frequencies and 'spec_args' as
+            input and calculates a spectrum for those frequencies.
+        spec_args : list
+            Function arguments to 'spec_shape'.
+        n_splits : int, default=1
+            Number of equally sized segments that the light curve will be
+            split into.
+        seed : int, default=False
+            Sets a seed for the random generator to get a reproducable result.
+            For testing only.
+
+        Returns
+        -----
+        None
+        """
+
+        # create light curve:
+        lightcurve = self._sim_tk(spec_shape, spec_args, seed=seed)
+
+        # split into segements:
+        if n_splits > 1:
+            lightcurve = self._split_lc(lightcurve, n_splits)
+        else:
+            lightcurve = [lightcurve]
+
+        # store in queue:
+        for lc in lightcurve:
+            queue.put(lc)
+
+    #--------------------------------------------------------------------------
+    def sim_tk(self, spec_shape, spec_args, nlcs=1, processes=1, seed=False):
         """Simulates one/multiple equally sampled light curve(s) following a
         random noise process with given a spectral shape of the power spectral
         density [1].
@@ -997,6 +1072,8 @@ class LightCurveSimulator:
             Function arguments to 'spec_shape'.
         nlcs : int, default=1
             Set the number of light curves that are produced. See notes below.
+        processes : int, default=1
+            Number of processes used to simulate light curves.
         seed : int, default=False
             Sets a seed for the random generator to get a reproducable result.
             For testing only.
@@ -1021,21 +1098,26 @@ class LightCurveSimulator:
             707
         """
 
+        # parallel simulation of light curves:
         n_iter, nlcs_per_iter = self._iterations(nlcs)
+        manager = Manager()
+        queue = manager.Queue()
+
+        if n_iter < processes:
+            processes = n_iter
+
+        with Pool(processes=processes) as pool:
+            pool.starmap(
+                    self._wrapper_tk,
+                    zip(range(n_iter), repeat(queue), repeat(spec_shape),
+                        repeat(spec_args), repeat(nlcs_per_iter),
+                        repeat(seed)))
+
+        # extract light curves from queue:
         self.lightcurves = []
 
-        for i in range(n_iter):
-            # simulate long lightcurve:
-            lightcurve = self._sim_tk(spec_shape, spec_args, seed=seed)
-
-            # extract shorter light curves:
-            for j in range(nlcs_per_iter):
-                m = j * (self.ndp - 1)
-                n = (j + 1) * (self.ndp - 1) + 1
-                self.lightcurves.append(lightcurve[m:n])
-
-                if len(self.lightcurves) >= nlcs:
-                    break
+        while len(self.lightcurves) < nlcs:
+            self.lightcurves.append(queue.get())
 
         self.sim_type = 'TK'
         self.lc_scale = 'None'
@@ -1082,11 +1164,10 @@ class LightCurveSimulator:
     def _adjust_pdf(
             self, lightcurve, pdf, pdf_params=None, pdf_range=None,
             iterations=100, keep_non_converged=False, threshold=0.01):
-        """Helper function that is called by self.adjust_pdf().
-
-        This function implements the Emmanoulopoulos et al, 2013 [1] algorithm
-        for changing the PDF of a light curve while maintaining its PSD. See
-        docstring of self.adjust_pdf() for details.
+        """Change the PDF of a light curve while maintaining its PSD.
+        This function implements the Emmanoulopoulos et al, 2013 [1] algorithm.
+        See docstring of self.adjust_pdf() for details.
+        This is a helper function that is called by self._wrapper_pdf().
 
         Parameters
         -----
@@ -1124,6 +1205,10 @@ class LightCurveSimulator:
         -----
         out : numpy.ndarray
             Simulated light curve with the target PDF.
+        out : int
+            Number of iterations reached until convergence.
+        out : bool
+            True, if converged. False, otherwise.
 
         References
         -----
@@ -1203,9 +1288,61 @@ class LightCurveSimulator:
         return lc_sim, i, converged
 
     #--------------------------------------------------------------------------
+    def _wrapper_pdf(
+            self, queue, lightcurve, pdf, pdf_params=None, pdf_range=None,
+            iterations=100, keep_non_converged=False, threshold=0.01):
+        """Helper function that is called by adjust_pdf() process pool to
+        change the PDF of light curves and store the results in a queue.
+
+        Parameters
+        -----
+        queue : multiprocessing.managers.AutoProxy[Queue]
+            Queue shared among processes for saving lightcurves.
+        lightcurve : numpy.ndarray
+            Flux density data of an evenly sampled light curve.
+        pdf : numpy.ndarray or callable
+            When providing flux data in a numpy.array the method will calculate
+            an ECDF of the input data and draw random flux values from that
+            ECDF.
+            When providing a callable function the method will use that
+            function to draw random flux values. Parameters for the function
+            need to be provided in 'pdf_params'
+        pdf_params : list, default=None
+            When a callable function is given to 'pdf', corresponding
+            parameters need to be given to 'pdf_params'.
+        pdf_range : list
+            List of two elements. Random flux values will be drawn from the
+            given PDF between the two limits provided by 'pdf_range'. Required
+            only when a callable function is given to 'pdf'. Does not have an
+            effect, when a numpy.ndarray is given to 'pdf'.
+        iterations : int, default=100
+            The algorithm [1] is iterative. This value sets a maximum number of
+            iterations to avoid infinite loops.
+        keep_non_converged : bool or str, default=False
+            If True the result is returned even if the algorithm [1] did not
+            converge.
+            If False and the algorithm [1] did not converge, False is returned.
+            If set to 'ask', a notification is written asking how to proceed.
+        threshold : float, default=0.01
+            Defines when the algorithm [1] is considered as converged.
+            Iterations are stopped when maximum difference between the current
+            and the previous light curve does not exceed this 'threshold'.
+
+        Returns
+        -----
+        None
+        """
+
+        lc_sim, i, converged = self._adjust_pdf(
+                lightcurve, pdf, pdf_params=pdf_params, pdf_range=pdf_range,
+                iterations=iterations, keep_non_converged=keep_non_converged,
+                threshold=threshold)
+        queue.put((lc_sim, i, converged))
+
+    #--------------------------------------------------------------------------
     def adjust_pdf(
             self, pdf, pdf_params=None, pdf_range=None, iterations=100,
-            keep_non_converged=False, threshold=0.01):
+            keep_non_converged=False, threshold=0.01, processes=1):
         """Change the PDF of all simulated light curves to a target PDF.
 
         This method implements the Emmanoulopoulos et al, 2013 [1] algorithm
@@ -1242,6 +1379,8 @@ class LightCurveSimulator:
             Defines when the algorithm [1] is considered as converged.
             Iterations are stopped when maximum difference between the current
             and the previous light curve does not exceed this 'threshold'.
+        processes : int, default=1
+            Number of processes used to simulate light curves.
 
         Returns
         -----
@@ -1258,18 +1397,32 @@ class LightCurveSimulator:
                   'adjust_pdf() aborted!')
             return None
 
+        # parallel processing of light curves:
+        manager = Manager()
+        queue = manager.Queue()
+
+        if len(self.lightcurves) < processes:
+            processes = len(self.lightcurves)
+
+        with Pool(processes=processes) as pool:
+            pool.starmap(
+                    self._wrapper_pdf,
+                    zip(repeat(queue), self.lightcurves, repeat(pdf),
+                        repeat(pdf_params), repeat(pdf_range),
+                        repeat(iterations), repeat(keep_non_converged),
+                        repeat(threshold)))
+
+        # extract results from queue:
+        nlcs = len(self.lightcurves)
+        self.lightcurves = []
         self.pdf_n_iter = []
         self.pdf_converged = []
 
-        # iterate through light curves:
-        for i, lc in enumerate(self.lightcurves):
-            lc_adj, n_iter, converged = self._adjust_pdf(
-                    lc, pdf, pdf_params=pdf_params, pdf_range=pdf_range,
-                    iterations=iterations,
-                    keep_non_converged=keep_non_converged, threshold=threshold)
-            self.lightcurves[i] = lc_adj
+        for i in range(nlcs):
+            lc_adj, n_iter, converged = queue.get()
 
             if lc_adj is not False:
+                self.lightcurves.append(lc_adj)
                 self.pdf_n_iter.append(n_iter)
                 self.pdf_converged.append(converged)
 
@@ -1277,6 +1430,10 @@ class LightCurveSimulator:
         if not keep_non_converged:
             self.lightcurves = [
                     lc for lc in self.lightcurves if lc is not False]
+            self.pdf_n_iter = [
+                    n_iter for n_iter, converged \
+                    in zip(self.pdf.n_iter, self.pdf_converged) if converged]
+            self.pdf_converged = [True] * len(self.pdf_n_iter)
 
         self.sim_type = 'EMP'
         if isinstance(pdf, ECDF):
