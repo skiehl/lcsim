@@ -1,5 +1,5 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-#!/usr/bin/env python
 """Blazar light curve simulation.
 """
 
@@ -1432,7 +1432,7 @@ class LightCurveSimulator:
                     lc for lc in self.lightcurves if lc is not False]
             self.pdf_n_iter = [
                     n_iter for n_iter, converged \
-                    in zip(self.pdf.n_iter, self.pdf_converged) if converged]
+                    in zip(self.pdf_n_iter, self.pdf_converged) if converged]
             self.pdf_converged = [True] * len(self.pdf_n_iter)
 
         self.sim_type = 'EMP'
@@ -1446,7 +1446,8 @@ class LightCurveSimulator:
     #--------------------------------------------------------------------------
     def sim_emp(
             self, spec_shape, spec_args, pdf, pdf_params=None, pdf_range=None,
-            nlcs=1,  iterations=100, keep_non_converged=False, threshold=0.01):
+            nlcs=1,  iterations=100, keep_non_converged=False, threshold=0.01,
+            processes=1):
         """Create a simulated light curve with a specified PSD and PDF.
 
         This method combines the two steps of producting a Gaussian light curve
@@ -1488,6 +1489,8 @@ class LightCurveSimulator:
             Defines when the algorithm [1] is considered as converged.
             Iterations are stopped when maximum difference between the current
             and the previous light curve does not exceed this 'threshold'.
+        processes : int, default=1
+            Number of processes used to simulate light curves.
 
         Returns
         -----
@@ -1512,11 +1515,11 @@ class LightCurveSimulator:
         [2] Emmanoulopoulos et al, 2013, MNRAS, 433, 907
         """
 
-        self.sim_tk(spec_shape, spec_args, nlcs=nlcs)
+        self.sim_tk(spec_shape, spec_args, nlcs=nlcs, processes=processes)
         self.adjust_pdf(
                 pdf, pdf_params=pdf_params, pdf_range=pdf_range,
                 iterations=iterations, keep_non_converged=keep_non_converged,
-                threshold=threshold)
+                threshold=threshold, processes=processes)
         self.pdf_check = False
 
         return len(self.lightcurves)
