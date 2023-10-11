@@ -31,6 +31,7 @@ scaling = 'pdf'
 n_iter_pdf = 100
 keep_non_converged = False
 convergence_threshold = 0.01
+powerlaw_index_lim = 2.
 
 # check PDF:
 check_pdf = True
@@ -39,13 +40,16 @@ drop_bad_pdf = True
 
 # number of simulations to store:
 n_simulations = {
-    'otherwise': 20000}
+    'otherwise': 10000}
 
 # number of tries to create the simulations:
 n_tries = 2
 
 # number of simulations to create in batch before storing:
 n_batch = 200
+
+# number of processes for parallel simulation:
+n_processes = 1
 
 # files and directories:
 file_psds = 'source_lists/sources_psds.dat'
@@ -61,6 +65,10 @@ cnv = {1: lambda s: float(s.strip() or np.nan)}
 sources = np.loadtxt(
         file_psds, dtype=[('name', 'U20'), ('index', float)],
         delimiter=',', usecols=(0, 1), skiprows=1, converters=cnv)
+
+if not sources.shape:
+    sources = np.expand_dims(sources, 0)
+
 n_sources = sources.shape[0]
 
 # iterate through sources:
@@ -75,8 +83,9 @@ for i, source in enumerate(sources, start=1):
         continue
 
     # skip if PSD is too steep for EMP-style simulation:
-    if scaling == 'pdf' and powerlaw_index > 2.:
-        print('Power law index > 2. Skip source for now.')
+    if scaling == 'pdf' and powerlaw_index_lim and \
+            powerlaw_index > powerlaw_index_lim:
+        print(f'Power law index > {powerlaw_index_lim}. Skip source for now.')
         continue
 
     # load data:
@@ -90,7 +99,7 @@ for i, source in enumerate(sources, start=1):
 
     # create directory, if needed:
     if not os.path.isdir(dir_sim):
-        os.mkdir(dir_sim)
+        os.makedirs(dir_sim)
 
     # set up data base connection:
     db_file = os.path.join(dir_sim, f'{source}.sqlite3')
@@ -163,12 +172,13 @@ for i, source in enumerate(sources, start=1):
                 spec_shape, spec_args, pdf, pdf_params=None, pdf_range=None,
                 nlcs=nlcs, iterations=n_iter_pdf,
                 keep_non_converged=keep_non_converged,
-                threshold=convergence_threshold)
+                threshold=convergence_threshold, processes=processes)
             count_pdf_success += n_created
 
         # Timmer&Koenig-type simulation:
         else:
-            n_created = sim.sim_tk(spec_shape, spec_args, nlcs=nlcs)
+            n_created = sim.sim_tk(
+                spec_shape, spec_args, nlcs=nlcs, processes=processes)
             sim.rescale(pdf.mean(), pdf.std())
 
         # check PDF:
