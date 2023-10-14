@@ -6,7 +6,6 @@
 import numpy as np
 import os
 import sqlite3
-import sys
 
 #==============================================================================
 # CLASSES
@@ -447,7 +446,7 @@ class DBConnectorSQLite:
         return n_sim
 
     #--------------------------------------------------------------------------
-    def iter_sim(self, cache=100):
+    def iter_sim(self, cache=100, batch=False):
         """Iteratively return simulated light curve data.
 
         Parameters
@@ -456,12 +455,26 @@ class DBConnectorSQLite:
             Simulations are loaded from the database in sets to speed up
             reading from the disk. This number sets how many simulations are
             read as a set. The default is 100.
+        batch : bool, optional
+            If True, simulated light curves are returned in batches, i.e. a
+            list of simulations. The number of simulations is given by the
+            `cache` argument. Otherwise, simulations are returned separately.
+            The default is False.
 
         Yields
         ------
-        numpy.ndarray
-            Array with the simulated light curve. The three columns contain
-            time, flux, and flux uncertainty.
+        numpy.ndarray or list of numpy.ndarray
+            Array with the simulated light curve, if `batch=False`. The three
+            columns contain time, flux, and flux uncertainty. A list of arrays
+            with simulated light curves, if `batch=True`. The number of items
+            is given by `cache`.
+
+        Notes
+        -----
+        Returning the simulated light curves in batches may be useful if they
+        should be further processed in parallel. An iterator such as this
+        method cannot be used with e.g. multiprocessing.Pool.map(). However,
+        each returned batch (i.e. list) can be parallel processed.
         """
 
         # TODO: This is a simplistic interface to access the light curves.
@@ -486,14 +499,27 @@ class DBConnectorSQLite:
                 result = self._query(connection, query).fetchall()
                 result = np.array(result).transpose()
 
-                # iterate through individual simulations:
-                for j in range(i0, i1):
-                    sel = np.nonzero(np.isclose(j+1, result[0]))[0]
-                    j0 = sel[0]
-                    j1 = sel[-1]
-                    sim = result[1:,j0:j1]
+                # yield light curves in batches:
+                if batch:
+                    batch_sim = []
 
-                    yield sim
+                    for j in range(i0, i1):
+                        sel = np.nonzero(np.isclose(j+1, result[0]))[0]
+                        j0 = sel[0]
+                        j1 = sel[-1]
+                        sim = result[1:,j0:j1]
+                        batch_sim.append(sim)
 
+                    yield batch_sim
 
+                # yield individual simulations:
+                else:
+                    for j in range(i0, i1):
+                        sel = np.nonzero(np.isclose(j+1, result[0]))[0]
+                        j0 = sel[0]
+                        j1 = sel[-1]
+                        sim = result[1:,j0:j1]
 
+                        yield sim
+
+#==============================================================================
