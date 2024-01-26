@@ -1,0 +1,16 @@
+cff-version: 1.1.0
+message: "Please cite the following works when using this software: https://ui.adsabs.harvard.edu/abs/2023ascl.soft10002K"
+authors:
+- family-names: Kiehlmann
+  given-names: Sebastian
+title: "lcsim: Light curve simulation code"
+version: PLACEHOLDER
+date-released:  Jan 24, 2020
+identifiers:
+ - type: "ascl-id"
+   value: "2310.002"
+ - type: "doi"
+   value: PLACEHOLDER
+ - type: "bibcode"
+   value: "2023ascl.soft10002K"
+abstract: "lcsim creates artificial light curves using two algorithms. The first simulates Gaussian distributed light curves following a specific power spectral density (PSD) freely selectable by the user. The second algorithm simulates light curves following a specific PSD and matching a specific probability density function (PDF). The package provides methods to resample the simulated light curves and add "observational" noise. Furthermore, the package provides an interface to a SQLite3-based database to store and access the simulations."

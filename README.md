@@ -56,6 +56,8 @@ Usage of the package is demonstrated in the jupyter notebook
 
 *Note:* Documentation of the simdb.py module is not yet included.
 
+A complete code documentation is given in `html/`.
+
 ## Citation
 
 Bibtex:
