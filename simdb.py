@@ -504,10 +504,10 @@ class DBConnectorSQLite:
                     batch_sim = []
 
                     for j in range(i0, i1):
-                        sel = np.nonzero(np.isclose(j+1, result[0]))[0]
+                        sel = np.nonzero(j+1 == result[0].astype(int))[0]
                         j0 = sel[0]
                         j1 = sel[-1]
-                        sim = result[1:,j0:j1]
+                        sim = result[1:,j0:j1].astype(float)
                         batch_sim.append(sim)
 
                     yield batch_sim
@@ -515,10 +515,10 @@ class DBConnectorSQLite:
                 # yield individual simulations:
                 else:
                     for j in range(i0, i1):
-                        sel = np.nonzero(np.isclose(j+1, result[0]))[0]
+                        sel = np.nonzero(j+1 == result[0].astype(int))[0]
                         j0 = sel[0]
                         j1 = sel[-1]
-                        sim = result[1:,j0:j1]
+                        sim = result[1:,j0:j1].astype(float)
 
                         yield sim
 
