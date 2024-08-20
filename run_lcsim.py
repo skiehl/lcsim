@@ -49,7 +49,7 @@ n_tries = 2
 n_batch = 200
 
 # number of processes for parallel simulation:
-n_processes = 1
+processes = 1
 
 # files and directories:
 file_psds = 'source_lists/sources_psds.dat'
